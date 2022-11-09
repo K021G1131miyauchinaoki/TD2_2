@@ -38,7 +38,7 @@ void Player::Update()
 	Rotate();
 
 	//ペアレント先更新
-	worldTransform_.matWorld_ *= worldTransform_.parent_->matWorld_;
+	//worldTransform_.matWorld_ *= worldTransform_.parent_->matWorld_;
 
 	MyFunc::UpdateWorldTransform(worldTransform_);
 

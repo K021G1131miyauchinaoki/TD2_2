@@ -16,7 +16,6 @@
 #include "MyFunc.h"
 #include "Player/Player.h"
 #include "Enemy.h"
-#include "skydome.h"
 #include "RailCamera.h"
 #include "EnemyBullet.h"
 #include <sstream>
@@ -87,7 +86,6 @@ public:
 
 	//3Dモデル
 	Model* model_ = nullptr;
-	Model* modelSkydome_ = nullptr;
 
 	//自キャラ
 	Player* player_ = nullptr;
@@ -114,7 +112,7 @@ public:
 	GameScene* gameScene_ = nullptr;
 
 	//天球
-	skydome* skydome_ = nullptr;
+	//skydome* skydome_ = nullptr;
 
 	//レールカメラ
 	RailCamera* railCamera_ = nullptr;
