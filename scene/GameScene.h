@@ -67,7 +67,7 @@ public:
 	void EnemyBulletUpdate();
 
 	/// 敵発生
-	void EnemyOcurrence(const Vector3& v);
+	void EnemyOcurrence();
 
 	//敵発生データの読み込み
 	void LoadEnemyPopData();

@@ -30,7 +30,7 @@ class Enemy
 
 public:
 	/// ê∂ê¨
-	void Initialize(Model* model, uint32_t textureHandle,const Vector3& v);
+	void Initialize(Model* model, uint32_t textureHandle);
 
 	/// çXêV
 	void Update();

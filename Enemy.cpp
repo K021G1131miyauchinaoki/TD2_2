@@ -1,6 +1,6 @@
 #include "Enemy.h"
 #include "GameScene.h"
-void Enemy::Initialize(Model* model, uint32_t textureHandle, const Vector3& v) {
+void Enemy::Initialize(Model* model, uint32_t textureHandle) {
 	assert(model);
 
 	model_ = model;
@@ -10,8 +10,8 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle, const Vector3& v) {
 	debugText_ = DebugText::GetInstance();
 
 	worldTransform_.Initialize();
-	//引数で受けとった初期座標をセット
-	worldTransform_.translation_ = { v.x,v.y,v.z };
+	worldTransform_.scale_ = { 3,3,3 };
+	worldTransform_.translation_ = { 0,0,30 };
 
 }
 
@@ -33,6 +33,7 @@ void Enemy::Update()
 	
 	}
 	//行列の計算
+	affinMat.scale = affin::generateScaleMat(worldTransform_);
 	affinMat.translate = affin::generateTransMat(worldTransform_);
 	
 	//行列の合成
@@ -45,7 +46,7 @@ void Enemy::Update()
 	Fire();
 
 	//デバックテキスト
-	debugText_->SetPos(50, 90);
+	debugText_->SetPos(50, 60);
 	debugText_->Printf("%f,%f,%f", 
 		worldTransform_.translation_.x, 
 		worldTransform_.translation_.y,
@@ -60,24 +61,24 @@ void Enemy::Draw(ViewProjection viewProjection)
 
 void Enemy::Approach()
 {
-	worldTransform_.translation_ += approach_;
+	//worldTransform_.translation_ += approach_;
 
-	//既定の位置に着いたら離脱へ
-	if (worldTransform_.translation_.z <= 10.0f)
-	{
-		phase_ = Phase::Leave;
-	}
+	////既定の位置に着いたら離脱へ
+	//if (worldTransform_.translation_.z <= 10.0f)
+	//{
+	//	phase_ = Phase::Leave;
+	//}
 }
 
 void Enemy::Leave()
 {
-	worldTransform_.translation_ += leave_;
+	//worldTransform_.translation_ += leave_;
 
-	//既定の位置に着いたら接近へ
-	if (worldTransform_.translation_.z >= 80.0f)
-	{
-		phase_ = Phase::Approach;
-	}
+	////既定の位置に着いたら接近へ
+	//if (worldTransform_.translation_.z >= 80.0f)
+	//{
+	//	phase_ = Phase::Approach;
+	//}
 }
 
 void Enemy::Fire()
