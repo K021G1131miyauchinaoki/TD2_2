@@ -23,10 +23,7 @@ void Player::Initialize(Model* model, uint32_t textureHandle)
 	worldTransform_.translation_ = Vector3{ 0,0,0 };
 
 	/*追加*/
-	time = 2.0f;
-	coolTime = 0;
-	aginDalayTimer = 20;
-	coolFlag = false;
+	timer = 0;
 }
 
 //更新
@@ -38,7 +35,7 @@ void Player::Update()
 	Rotate();
 
 	//ペアレント先更新
-	worldTransform_.matWorld_ *= worldTransform_.parent_->matWorld_;
+	//worldTransform_.matWorld_ *= worldTransform_.parent_->matWorld_;
 
 	MyFunc::UpdateWorldTransform(worldTransform_);
 
@@ -67,9 +64,6 @@ void Player::Update()
 		worldTransform_.rotation_.x,
 		worldTransform_.rotation_.y,
 		worldTransform_.rotation_.z);
-	debugText_->SetPos(100, 200);
-	debugText_->Printf("%d",
-		coolTime);
 }
 
 //移動
@@ -92,11 +86,11 @@ void Player::Move()
 
 	if (input_->PushKey(DIK_UP))
 	{
-		move.y = kCharacterSpeed;
+		move.z = kCharacterSpeed;
 	}
 	else if (input_->PushKey(DIK_DOWN))
 	{
-		move.y = -kCharacterSpeed;
+		move.z = -kCharacterSpeed;
 	}
 
 	//移動限界座標
@@ -158,9 +152,9 @@ void Player::Draw(ViewProjection viewProjection)
 void Player::Attack() 
 {
 
-	if (input_->PushKey(DIK_SPACE)&&!coolFlag) {
+	if (input_->PushKey(DIK_SPACE)) {
 
-		dalayTimer -= 0.1f;
+		timer -= 0.1f;
 
 		//自キャラの座標をコピー
 		Vector3 position = GetWorldPosition();
@@ -173,7 +167,7 @@ void Player::Attack()
 		velocity = bVelocity(velocity, worldTransform_);
 
 		//クールタイムが０になったとき
-		if (dalayTimer <= 0)
+		if (timer <= 0)
 		{
 			//球の生成
 			std::unique_ptr<PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
@@ -183,45 +177,8 @@ void Player::Attack()
 			//球の登録
 			bullets_.push_back(std::move(newBullet));
 
-			//＝をtimeに変換
-			time -= 0.1f;
-			if (time<=0.4f)
-			{
-				time = 0.4f;
-			}
-			dalayTimer = time;
+			timer = time;
 		}
-		coolTime++;
-
-	}
-	else if (!input_->PushKey(DIK_SPACE)) {
-		if (coolTime>0)
-		{
-			coolTime -= 2;
-		}
-		if (aginDalayTimer-- < 0)
-		{
-			aginDalayTimer = 20;
-			time += 0.5f;
-			if (time >= 2.0f)
-			{
-				time = 2.0f;
-			}
-		}
-	}
-
-	if (coolFlag)
-	{
-		coolTime--;
-		if (coolTime < 300)
-		{
-			coolTime = 0;
-			coolFlag = false;
-		}
-	}
-	else	if (!coolFlag &&coolTime>=500)
-	{
-		coolFlag = true;
 	}
 }
 

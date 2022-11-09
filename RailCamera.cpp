@@ -89,7 +89,7 @@ void RailCamera::Update()
 
 	viewProjection_.eye = worldTransform_.translation_;
 	//前方ベクトル
-	Vector3 forward(0, 20, 1);
+	Vector3 forward(0, 0, 1);
 
 	//レールカメラの回転を反映
 	forward = affin::matVector(forward, worldTransform_.matWorld_);

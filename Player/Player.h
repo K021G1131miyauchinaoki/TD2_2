@@ -64,14 +64,8 @@ private:
 	uint32_t textureHandle_ = 0u;
 
 	//‘Å‚¿o‚·‚Ü‚Å‚ÌŠÔ
-	float dalayTimer = 0.0f;
-		/*’Ç‰Á*/
-	float	time;
-	int	coolTime;
-	bool	coolFlag;
-	int	aginDalayTimer;
-
-
+	float timer = 0.0f;
+	const float	time=1.5f;
 	//’e
 	std::list<std::unique_ptr<PlayerBullet>> bullets_;
 
