@@ -60,53 +60,90 @@ void GameScene::Initialize() {
 
 	////ライン描画が参照するビュープロジェクションを指定する(アドレス渡し)
 	//PrimitiveDrawer::GetInstance()->SetViewProjection(&debugCamera_->GetViewProjection());
+
+	scene = Scene::start;
 }
 
 void GameScene::Update()
 {
-
-	//デスフラグの立った敵を削除
-	enemys_.remove_if([](std::unique_ptr < Enemy>& enemy_)
+	switch (scene)
+	{
+	case Scene::start:
+		debugText_->SetPos(10, 10);
+		debugText_->Printf("start");
+		if (input_->TriggerKey(DIK_SPACE))
 		{
-			return enemy_->IsDead();
-		});
+			scene = Scene::play;
+		}
+		break;
+	case Scene::play:
+		//デスフラグの立った敵を削除
+		enemys_.remove_if([](std::unique_ptr < Enemy>& enemy_)
+			{
+				return enemy_->IsDead();
+			});
 
-	//自キャラの更新
-	player_->Update();
+		//自キャラの更新
+		player_->Update();
 
-	//レールカメラの更新
-	railCamera_->Update();
+		//レールカメラの更新
+		railCamera_->Update();
 
-	//更新コマンド
-	/*UpdateEnemyPopCommands();*/
+		//更新コマンド
+		/*UpdateEnemyPopCommands();*/
 
-	//敵キャラの更新
-	for (const std::unique_ptr<Enemy>& enemy : enemys_) {
-		enemy->SetGameScene(this);
-		enemy->Update();
+		//敵キャラの更新
+		for (const std::unique_ptr<Enemy>& enemy : enemys_) {
+			enemy->SetGameScene(this);
+			enemy->Update();
+		}
+
+		//敵弾の更新
+		EnemyBulletUpdate();
+
+		isDebugCameraActive_ = true;
+
+		if (isDebugCameraActive_)
+		{
+			debugCamera_->Update();
+			viewProjection_.matView = debugCamera_->GetViewProjection().matView;
+			viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
+			viewProjection_.TransferMatrix();
+		}
+		else
+		{
+			viewProjection_.UpdateMatrix();
+			viewProjection_.TransferMatrix();
+		}
+
+		//当たり判定
+		CheckAllCollisions();
+		if (input_->TriggerKey(DIK_B))
+		{
+			scene = Scene::clear;
+		}
+		if (input_->TriggerKey(DIK_V))
+		{
+			scene = Scene::over;
+		}
+		break;
+	case Scene::clear:
+		debugText_->SetPos(10, 30);
+		debugText_->Printf("clear");
+		if (input_->TriggerKey(DIK_SPACE))
+		{
+			scene = Scene::start;
+		}
+		break;
+	case Scene::over:
+		debugText_->SetPos(10, 10);
+		debugText_->Printf("over");
+		if (input_->TriggerKey(DIK_SPACE))
+		{
+			scene = Scene::start;
+		}
+		break;
 	}
-
-	//敵弾の更新
-	EnemyBulletUpdate();
-
-	isDebugCameraActive_ = true;
-
-	if (isDebugCameraActive_)
-	{
-		debugCamera_->Update();
-		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
-		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
-		viewProjection_.TransferMatrix();
-	}
-	else
-	{
-		viewProjection_.UpdateMatrix();
-		viewProjection_.TransferMatrix();
-	}
-
-	//当たり判定
-	CheckAllCollisions();
-
 }
 
 void GameScene::Draw() {
@@ -135,19 +172,29 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
-	//自キャラの描画
-	player_->Draw(railCamera_->GetViewProjection());
+	switch (scene)
+	{
+	case Scene::start:
+		break;
+	case Scene::play:
+		//自キャラの描画
+		player_->Draw(railCamera_->GetViewProjection());
 
-	//敵キャラの描画
-	for (const std::unique_ptr<Enemy>& enemy : enemys_) {
-		enemy->Draw(railCamera_->GetViewProjection());
+		//敵キャラの描画
+		for (const std::unique_ptr<Enemy>& enemy : enemys_) {
+			enemy->Draw(railCamera_->GetViewProjection());
+		}
+
+		//敵の弾の描画
+		for (std::unique_ptr<EnemyBullet>& bullet : bullets_) {
+			bullet->Draw(railCamera_->GetViewProjection());
+		}
+		break;
+	case Scene::clear:
+		break;
+	case Scene::over:
+		break;
 	}
-
-	//敵の弾の描画
-	for (std::unique_ptr<EnemyBullet>& bullet : bullets_) {
-		bullet->Draw(railCamera_->GetViewProjection());
-	}
-
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
 
