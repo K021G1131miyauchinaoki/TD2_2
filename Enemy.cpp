@@ -43,7 +43,7 @@ void Enemy::Update()
 	worldTransform_.TransferMatrix();
 	
 	//弾を発射
-	Fire();
+	SelfAiming();
 
 	//デバックテキスト
 	debugText_->SetPos(50, 60);
@@ -81,7 +81,7 @@ void Enemy::Leave()
 	//}
 }
 
-void Enemy::Fire()
+void Enemy::SelfAiming()
 {
 	delayTimer -= 0.1f;
 
@@ -123,6 +123,13 @@ void Enemy::Fire()
 
 		delayTimer = 20.0f;
 	}
+}
+
+void Enemy::InductionFire()
+{
+	//発射するまでの時間
+	delayTimer -= 0.1f;
+
 }
 
 //ワールド座標を取得

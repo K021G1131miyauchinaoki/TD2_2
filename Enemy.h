@@ -44,8 +44,11 @@ public:
 	//—£’E
 	void Leave();
 
-	//’e”­Ë
-	void Fire();
+	//’eí—Ş
+	//’¼ü(©‹@‘_‚¢)
+	void SelfAiming();
+	//—U“±
+	void InductionFire();
 
 	void SetPlayer(Player* player) { player_ = player; }
 
@@ -93,7 +96,8 @@ private:
 	affin::AffinMat affinMat;
 
 	//‘Å‚¿o‚·‚Ü‚Å‚ÌŠÔ
-	float delayTimer = 0.0f;
+	float delayTimer = 20.0f;
+	float inductionTimer = 25.0f;
 
 	//“G‚Ìs“®ƒpƒ^[ƒ“
 	Phase phase_ = Phase::None;
