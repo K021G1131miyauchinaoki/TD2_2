@@ -20,7 +20,7 @@ void Player::Initialize(Model* model, uint32_t textureHandle)
 
 	worldTransform_.rotation_ = {};
 
-	worldTransform_.translation_ = Vector3{ 0,0,0 };
+	worldTransform_.translation_ = Vector3{ 0,0,-15 };
 
 	/*’Ç‰Á*/
 	timer = 0;

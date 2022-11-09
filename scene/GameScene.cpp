@@ -31,7 +31,7 @@ void GameScene::Initialize() {
 
 	//レールカメラの生成
 	railCamera_ = new RailCamera();
-	railCamera_->Initialize(Vector3(0, 100, 50), Vector3(0, 0, 0));
+	railCamera_->Initialize(Vector3(0, 50, 0), Vector3(0, 0, 0));
 
 	//自キャラの生成
 	player_ = new Player();

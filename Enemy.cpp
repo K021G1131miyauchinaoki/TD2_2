@@ -10,8 +10,8 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle) {
 	debugText_ = DebugText::GetInstance();
 
 	worldTransform_.Initialize();
-	worldTransform_.scale_ = { 3,3,3 };
-	worldTransform_.translation_ = { 0,0,30 };
+	worldTransform_.scale_ = { 15,15,15 };
+	worldTransform_.translation_ = { 0,0,28 };
 
 }
 
