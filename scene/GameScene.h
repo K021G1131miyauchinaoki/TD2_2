@@ -68,12 +68,6 @@ public:
 	/// 敵発生
 	void EnemyOcurrence();
 
-	//敵発生データの読み込み
-	void LoadEnemyPopData();
-
-	//敵発生コマンドの更新
-	void UpdateEnemyPopCommands();
-
   private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
@@ -127,6 +121,18 @@ public:
 	bool isDebugCameraActive_ = false;
 
 	const float M_PI = 3.141592f;
+
+	//シーン管理
+	enum Scene
+	{
+		start,
+		play,
+		clear,
+		over
+	};
+	int scene;
+
+
 
 	/// <summary>
 	/// ゲームシーン用
