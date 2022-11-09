@@ -28,31 +28,31 @@ void RailCamera::Update()
 	worldTransform_.matWorld_ = MathUtility::Matrix4Identity();
 
 #pragma region 移動処理
-	if (input_->PushKey(DIK_A)) {
-		move.x -= kCharaSpeed;
-	}
-	if (input_->PushKey(DIK_D)) {
-		move.x += kCharaSpeed;
-	}
-	if (input_->PushKey(DIK_W)) {
-		move.y += kCharaSpeed;
-	}
-	if (input_->PushKey(DIK_S)) {
-		move.y -= kCharaSpeed;
-	}
+	//if (input_->PushKey(DIK_A)) {
+	//	move.x -= kCharaSpeed;
+	//}
+	//if (input_->PushKey(DIK_D)) {
+	//	move.x += kCharaSpeed;
+	//}
+	//if (input_->PushKey(DIK_W)) {
+	//	move.y += kCharaSpeed;
+	//}
+	//if (input_->PushKey(DIK_S)) {
+	//	move.y -= kCharaSpeed;
+	//}
 
-	//移動限界座標
-	const float kMoveLimitX = 36.0f;
-	const float kMoveLimitY = 20.0f;
+	////移動限界座標
+	//const float kMoveLimitX = 36.0f;
+	//const float kMoveLimitY = 20.0f;
 
-	worldTransform_.translation_.x += move.x;
-	worldTransform_.translation_.y += move.y;
-	
-	//範囲を超えない処理
-	worldTransform_.translation_.x = max(worldTransform_.translation_.x, -kMoveLimitX);
-	worldTransform_.translation_.x = min(worldTransform_.translation_.x, +kMoveLimitX);
-	worldTransform_.translation_.y = max(worldTransform_.translation_.y, -kMoveLimitY);
-	worldTransform_.translation_.y = min(worldTransform_.translation_.y, +kMoveLimitY);
+	//worldTransform_.translation_.x += move.x;
+	//worldTransform_.translation_.y += move.y;
+	//
+	////範囲を超えない処理
+	//worldTransform_.translation_.x = max(worldTransform_.translation_.x, -kMoveLimitX);
+	//worldTransform_.translation_.x = min(worldTransform_.translation_.x, +kMoveLimitX);
+	//worldTransform_.translation_.y = max(worldTransform_.translation_.y, -kMoveLimitY);
+	//worldTransform_.translation_.y = min(worldTransform_.translation_.y, +kMoveLimitY);
 
 	matTranslate = affin::generateTransMat(worldTransform_);
 #pragma endregion
@@ -89,16 +89,16 @@ void RailCamera::Update()
 
 	viewProjection_.eye = worldTransform_.translation_;
 	//前方ベクトル
-	Vector3 forward(0, 0, 1);
+	Vector3 forward(0, 20, 1);
 
 	//レールカメラの回転を反映
 	forward = affin::matVector(forward, worldTransform_.matWorld_);
 
 	//視点から前方に適当に進んだ位置が注視点
-	viewProjection_.target = viewProjection_.eye + forward;
+	viewProjection_.target -= viewProjection_.eye + forward;
 
 	//上方ベクトル
-	Vector3 up(0, 1, 0);
+	Vector3 up(0, 1, 1);
 	//
 	viewProjection_.up = affin::matVector(up, worldTransform_.matWorld_);
 
