@@ -37,6 +37,7 @@ public:
 	float GetRadius();
 
 	void SetPlayer(Player* player) { player_ = player; }
+	Vector3 sLerp(const Vector3& v1, const Vector3& v2, float time);
 private:
 	//ワールド変換データ
 	WorldTransform worldTransform_;

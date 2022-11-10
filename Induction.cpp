@@ -77,3 +77,9 @@ float Induction::GetRadius()
 {
 	return radius;
 }
+
+Vector3 Induction::sLerp(const Vector3& v1, const Vector3& v2, float time)
+{
+	//«LerpŠÖ”sLerp‚É•ÏX‚·‚é•K—v‚ª‚ ‚é
+	return v1 * (1.0f - time) + v2 * time;
+}
