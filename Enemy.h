@@ -49,6 +49,8 @@ public:
 	void SelfAiming();
 	//—U“±
 	void InductionFire();
+	//—†ù
+	void SpiralFire();
 
 	void SetPlayer(Player* player) { player_ = player; }
 
@@ -97,6 +99,7 @@ private:
 
 	//‘Å‚¿o‚·‚Ü‚Å‚ÌŠÔ
 	float delayTimer = 20.0f;
+	//—U“±’e‚Ì”­ËŠÔ
 	float inductionTimer = 25.0f;
 
 	//“G‚Ìs“®ƒpƒ^[ƒ“

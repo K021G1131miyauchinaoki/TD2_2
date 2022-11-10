@@ -71,7 +71,7 @@ void GameScene::Update()
 	case Scene::start:
 		debugText_->SetPos(10, 10);
 		debugText_->Printf("start");
-		if (input_->TriggerKey(DIK_SPACE))
+		if (input_->TriggerKey(DIK_W))
 		{
 			scene = Scene::play;
 		}

@@ -44,6 +44,7 @@ void Enemy::Update()
 	
 	//弾を発射
 	SelfAiming();
+	/*InductionFire();*/
 
 	//デバックテキスト
 	debugText_->SetPos(50, 60);
@@ -127,8 +128,19 @@ void Enemy::SelfAiming()
 
 void Enemy::InductionFire()
 {
-	//発射するまでの時間
+	inductionTimer -= 0.1f;
+	//速度
+	const float kBulletSpeed = 0.3f;
+	//球の生成
+	std::unique_ptr<EnemyBullet> newBullet = std::make_unique<EnemyBullet>();
+}
+
+void Enemy::SpiralFire()
+{
 	delayTimer -= 0.1f;
+
+	//球の速度
+	const float kBulletSpeed = 0.5f;
 
 }
 

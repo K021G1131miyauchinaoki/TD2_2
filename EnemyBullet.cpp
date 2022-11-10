@@ -1,4 +1,5 @@
 #include "EnemyBullet.h"
+#include "MathUtility.h"
 
 void EnemyBullet::Initialize(Model* model, const Vector3& position, const Vector3& velocity)
 {
@@ -24,6 +25,9 @@ void EnemyBullet::Update()
 {
 	worldTransform_.matWorld_ = MathUtility::Matrix4Identity();
 
+	worldTransform_.rotation_.x -= 0.5f;
+	affinMat.rotateX = affin::generateRotateXMat(worldTransform_);
+	affin::setRotateMat(affinMat, worldTransform_);
 	//ç¿ïWÇà⁄ìÆÇ≥ÇπÇÈ
 	worldTransform_.translation_ -= velocity_;
 	affinMat.translate = affin::generateTransMat(worldTransform_);
@@ -67,3 +71,5 @@ float EnemyBullet::GetRadius()
 {
 	return radius; 
 }
+
+

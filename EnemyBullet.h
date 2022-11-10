@@ -5,6 +5,12 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include "affin/affin.h"
+#include "Player/Player.h"
+
+
+//‘O•ûéŒ¾Player
+class Player;
+
 class EnemyBullet
 {
 public:
@@ -53,4 +59,5 @@ private:
 
 	//”¼Œa
 	float radius = 1.0f;
+	Player* player_ = nullptr;
 };
