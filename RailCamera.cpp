@@ -15,10 +15,27 @@ void RailCamera::Initialize(const Vector3& position, const Vector3& rotation)
 	//ビュープロジェクションの初期化
 	//viewProjection_.farZ = 300.0f;
 	viewProjection_.Initialize();
+	//viewProjection_.fovAngleY= 20.0f * MathUtility::PI / 180.0f;;
 }
 
-void RailCamera::Update()
+void RailCamera::Update(int num)
 {
+	if (num==0)
+	{
+		worldTransform_.translation_ = Vector3(0, 50, 0);
+	}
+	else if (num==1)//登場
+	{
+		worldTransform_.translation_ = Vector3(0, 50, 10);
+	}
+	else if (num == 2)//形態変化1
+	{
+		worldTransform_.translation_ = Vector3(0, 50, 20);
+	}
+	else if (num == 3)//形態変化2
+	{
+		worldTransform_.translation_ = Vector3(0, 50, 30);
+	}
 	Vector3 move = { 0, 0, 0 };
 
 	const float kCharaSpeed = 0.2f;
@@ -64,12 +81,12 @@ void RailCamera::Update()
 	Matrix4 matRotX;
 
 	//回転処理
-	if (input_->PushKey(DIK_Q)) {
+	/*if (input_->PushKey(DIK_Q)) {
 		worldTransform_.rotation_.x += kCharaRotX;
 	}
 	if (input_->PushKey(DIK_E)) {
 		worldTransform_.rotation_.x -= kCharaRotX;
-	}
+	}*/
 	//(-)2πを超えたら回転角を0に戻す処理
 	if (worldTransform_.rotation_.x >= (M_PI * 2) || worldTransform_.rotation_.x <= -(M_PI * 2)) {
 		worldTransform_.rotation_.x = 0;
@@ -89,8 +106,23 @@ void RailCamera::Update()
 
 	viewProjection_.eye = worldTransform_.translation_;
 	//前方ベクトル
-	Vector3 forward(0, -1, 0);
-
+	Vector3 forward;
+	if (num == 0)
+	{
+		forward = { 0, -1, 0 };
+	}
+	else if (num == 1)//登場
+	{
+		forward = { 0, -1, 1 };
+	}
+	else if (num == 2)//形態変化1
+	{
+		forward = { 0, -1, -1 };
+	}
+	else if (num == 3)//形態変化2
+	{
+		forward = { 0, -1, 2 };
+	}
 	//レールカメラの回転を反映
 	forward = affin::matVector(forward, worldTransform_.matWorld_);
 
