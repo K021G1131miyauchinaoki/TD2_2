@@ -145,7 +145,7 @@ public:
 	bool	phase;
 
 	//フェーズをタイム管理（仮）
-	const	int time = 100;
+	const	int time = 300;
 	int timer;
 
 	/// <summary>

@@ -33,7 +33,7 @@ public:
 	void Initialize(Model* model, uint32_t textureHandle);
 
 	/// 更新
-	void Update();
+	void Update(bool flag);
 
 	/// 描画
 	void Draw(ViewProjection viewProjection);
@@ -116,5 +116,8 @@ private:
 
 	//半径
 	float radius = 1.0f;
+	//フェーズフラグ
+	bool phaseFlag;
+
 };
 

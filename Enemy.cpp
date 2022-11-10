@@ -9,14 +9,15 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle) {
 	//input_ = Input::GetInstance();
 	debugText_ = DebugText::GetInstance();
 
-	worldTransform_.Initialize();
 	worldTransform_.scale_ = { 15,15,15 };
 	worldTransform_.translation_ = { 0,0,28 };
+	worldTransform_.Initialize();
 
 }
 
-void Enemy::Update()
+void Enemy::Update(bool flag)
 {
+	this->phaseFlag = flag;
 	//単位行列を設定
 	worldTransform_.matWorld_ = MathUtility::Matrix4Identity();
 
@@ -84,45 +85,48 @@ void Enemy::Leave()
 
 void Enemy::SelfAiming()
 {
-	delayTimer -= 0.1f;
+	if (phaseFlag==false)
+	{
+		delayTimer -= 0.1f;
 
-	//球の速度
-	const float kBulletSpeed = 0.5f;
+		//球の速度
+		const float kBulletSpeed = 0.5f;
 
-	//自機狙い弾
-	assert(player_);
+		//自機狙い弾
+		assert(player_);
 
-	//プレイヤーのワールド座標の取得
-	Vector3 playerPosition;
-	playerPosition = player_->GetWorldPosition();
-	//敵のワールド座標の取得
-	Vector3 enemyPosition;
-	enemyPosition = GetWorldPosition();
+		//プレイヤーのワールド座標の取得
+		Vector3 playerPosition;
+		playerPosition = player_->GetWorldPosition();
+		//敵のワールド座標の取得
+		Vector3 enemyPosition;
+		enemyPosition = GetWorldPosition();
 
-	Vector3 velocity(0, 0, 0);
+		Vector3 velocity(0, 0, 0);
 
-	//差分ベクトルを求める
-	velocity = enemyPosition - playerPosition;
+		//差分ベクトルを求める
+		velocity = enemyPosition - playerPosition;
 
-	//長さを求める
-	Vector3Length(velocity);
-	//正規化
-	Vector3Normalize(velocity);
-	//ベクトルの長さを,速さに合わせる
-	velocity *= kBulletSpeed;//これが速度になる
+		//長さを求める
+		Vector3Length(velocity);
+		//正規化
+		Vector3Normalize(velocity);
+		//ベクトルの長さを,速さに合わせる
+		velocity *= kBulletSpeed;//これが速度になる
 
-	//クールタイムが０になったとき
-	if (delayTimer <= 0) {
-		//球の生成
-		std::unique_ptr<EnemyBullet> newBullet = std::make_unique<EnemyBullet>();
-		//球の初期化
-		newBullet->Initialize(model_, worldTransform_.translation_, velocity);
+		//クールタイムが０になったとき
+		if (delayTimer <= 0) {
+			//球の生成
+			std::unique_ptr<EnemyBullet> newBullet = std::make_unique<EnemyBullet>();
+			//球の初期化
+			newBullet->Initialize(model_, worldTransform_.translation_, velocity);
 
-		//球の登録
-		/*bullets_.push_back(std::move(newBullet));*/
-		gameScene_->AddEnemyBullet(newBullet);
+			//球の登録
+			/*bullets_.push_back(std::move(newBullet));*/
+			gameScene_->AddEnemyBullet(newBullet);
 
-		delayTimer = 20.0f;
+			delayTimer = 20.0f;
+		}
 	}
 }
 

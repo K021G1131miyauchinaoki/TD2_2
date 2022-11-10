@@ -72,7 +72,7 @@ void GameScene::Update()
 	{
 	case Scene::title:		/*タイトル*/
 		debugText_->SetPos(10, 10);
-		debugText_->Printf("start");
+		debugText_->Printf("title");
 		if (input_->TriggerKey(DIK_W))
 		{
 			scene = Scene::play;
@@ -87,7 +87,15 @@ void GameScene::Update()
 			{
 				return enemy_->IsDead();
 			});
-
+		if (timer--<0)
+		{
+			phase ^= 1;
+			timer = time;
+		}
+		debugText_->SetPos(10, 10);
+		debugText_->Printf("%d", phase);
+		debugText_->SetPos(10, 30);
+		debugText_->Printf("%d",timer);
 		//自キャラの更新
 		/*phaseがtrueならプレイヤーの攻撃*/
 		player_->Update(phase);
@@ -96,7 +104,7 @@ void GameScene::Update()
 		for (const std::unique_ptr<Enemy>& enemy : enemys_) {
 			enemy->SetGameScene(this);
 			/*phaseがfalseならボスの攻撃*/
-			enemy->Update();/*弾の処理が終わったら引数を追加*/
+			enemy->Update(phase);
 		}
 		//更新コマンド
 		/*UpdateEnemyPopCommands();*/
