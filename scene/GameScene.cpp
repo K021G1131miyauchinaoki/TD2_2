@@ -61,14 +61,16 @@ void GameScene::Initialize() {
 	////ライン描画が参照するビュープロジェクションを指定する(アドレス渡し)
 	//PrimitiveDrawer::GetInstance()->SetViewProjection(&debugCamera_->GetViewProjection());
 
-	scene = Scene::start;
+	scene = Scene::title;
+	phase = true;
+	timer = time;
 }
 
 void GameScene::Update()
 {
 	switch (scene)
 	{
-	case Scene::start:
+	case Scene::title:		/*タイトル*/
 		debugText_->SetPos(10, 10);
 		debugText_->Printf("start");
 		if (input_->TriggerKey(DIK_W))
@@ -76,7 +78,10 @@ void GameScene::Update()
 			scene = Scene::play;
 		}
 		break;
-	case Scene::play:
+	case Scene::play:		/*プレイ*/
+		//当たり判定
+		CheckAllCollisions();
+
 		//デスフラグの立った敵を削除
 		enemys_.remove_if([](std::unique_ptr < Enemy>& enemy_)
 			{
@@ -84,63 +89,69 @@ void GameScene::Update()
 			});
 
 		//自キャラの更新
-		player_->Update();
-
-		//レールカメラの更新
-		railCamera_->Update();
-
-		//更新コマンド
-		/*UpdateEnemyPopCommands();*/
+		/*phaseがtrueならプレイヤーの攻撃*/
+		player_->Update(phase);
 
 		//敵キャラの更新
 		for (const std::unique_ptr<Enemy>& enemy : enemys_) {
 			enemy->SetGameScene(this);
-			enemy->Update();
+			/*phaseがfalseならボスの攻撃*/
+			enemy->Update();/*弾の処理が終わったら引数を追加*/
 		}
+		//更新コマンド
+		/*UpdateEnemyPopCommands();*/
+
 
 		//敵弾の更新
 		EnemyBulletUpdate();
 
-		isDebugCameraActive_ = true;
+		//isDebugCameraActive_ = true;
 
-		if (isDebugCameraActive_)
-		{
-			debugCamera_->Update();
-			viewProjection_.matView = debugCamera_->GetViewProjection().matView;
-			viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
-			viewProjection_.TransferMatrix();
-		}
-		else
-		{
-			viewProjection_.UpdateMatrix();
-			viewProjection_.TransferMatrix();
-		}
+		//レールカメラの更新
+		railCamera_->Update();
 
-		//当たり判定
-		CheckAllCollisions();
+		//if (isDebugCameraActive_)
+		//{
+		//	debugCamera_->Update();
+		//	viewProjection_.matView = debugCamera_->GetViewProjection().matView;
+		//	viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
+		//	viewProjection_.TransferMatrix();
+		//}
+		//else
+		//{
+		//}
+
+		viewProjection_.UpdateMatrix();
+		viewProjection_.TransferMatrix();
+		//クリア
 		if (input_->TriggerKey(DIK_B))
 		{
 			scene = Scene::clear;
 		}
+		//オーバー
 		if (input_->TriggerKey(DIK_V))
 		{
 			scene = Scene::over;
 		}
 		break;
-	case Scene::clear:
+
+	case Scene::clear:		/*ゲームクリア*/
 		debugText_->SetPos(10, 30);
 		debugText_->Printf("clear");
+		//スペースでタイトル
 		if (input_->TriggerKey(DIK_SPACE))
 		{
-			scene = Scene::start;
+			scene = Scene::title;
 		}
 		break;
-	case Scene::over:
+
+	case Scene::over:		/*ゲームオーバー*/
 		debugText_->SetPos(10, 10);
 		debugText_->Printf("over");
+		//スペースでタイトル
 		if (input_->TriggerKey(DIK_SPACE))
 		{
-			scene = Scene::start;
+			scene = Scene::title;
 		}
 		break;
 	}
@@ -174,7 +185,7 @@ void GameScene::Draw() {
 	/// </summary>
 	switch (scene)
 	{
-	case Scene::start:
+	case Scene::title:
 		break;
 	case Scene::play:
 		//自キャラの描画

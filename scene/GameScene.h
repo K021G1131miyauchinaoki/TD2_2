@@ -125,14 +125,28 @@ public:
 	//シーン管理
 	enum Scene
 	{
-		start,
+		title,
 		play,
 		clear,
 		over
 	};
 	int scene;
 
+	//ボス登場、形態変化
+	enum Boss {
+		appearance,
+		change1,
+		change2
+	};
 
+	//フェーズ管理
+	//trueでプレイヤーの攻撃フェーズ
+	//falseで敵の攻撃フェーズ
+	bool	phase;
+
+	//フェーズをタイム管理（仮）
+	const	int time = 100;
+	int timer;
 
 	/// <summary>
 	/// ゲームシーン用

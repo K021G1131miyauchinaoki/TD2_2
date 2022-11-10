@@ -27,7 +27,7 @@ void Player::Initialize(Model* model, uint32_t textureHandle)
 }
 
 //更新
-void Player::Update()
+void Player::Update(bool num)
 {
 	//移動
 	Move();
@@ -40,7 +40,10 @@ void Player::Update()
 	MyFunc::UpdateWorldTransform(worldTransform_);
 
 	//攻撃
-	Attack();
+	if (num==true)
+	{
+		Attack();
+	}
 	//弾更新
 	for(std::unique_ptr<PlayerBullet>& bullet : bullets_)
 	{

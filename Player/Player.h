@@ -21,7 +21,7 @@ public:
 	void Initialize(Model* model,uint32_t textureHandle);
 
 	//XV
-	void Update();
+	void Update(bool num);
 
 	//ˆÚ“®
 	void Move();
