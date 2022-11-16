@@ -14,7 +14,7 @@ public:
 	void Initialize(const Vector3& position, const Vector3& rotation);
 
 	//çXêV
-	void Update();
+	void Update(int num);
 
 	const ViewProjection& GetViewProjection() 
 	{ 

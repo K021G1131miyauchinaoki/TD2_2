@@ -27,7 +27,7 @@ void Player::Initialize(Model* model, uint32_t textureHandle)
 }
 
 //XV
-void Player::Update(bool num)
+void Player::Update(int num)
 {
 	//ˆÚ“®
 	Move();
@@ -40,7 +40,7 @@ void Player::Update(bool num)
 	MyFunc::UpdateWorldTransform(worldTransform_);
 
 	//UŒ‚
-	if (num==true)
+	if (num==0)
 	{
 		Attack();
 	}

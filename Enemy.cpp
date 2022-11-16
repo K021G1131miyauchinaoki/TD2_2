@@ -15,9 +15,9 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle) {
 
 }
 
-void Enemy::Update(bool flag)
+void Enemy::Update(int num)
 {
-	this->phaseFlag = flag;
+	this->isPhase = num;
 	//’PˆÊs—ñ‚ğİ’è
 	worldTransform_.matWorld_ = MathUtility::Matrix4Identity();
 
@@ -85,7 +85,7 @@ void Enemy::Leave()
 
 void Enemy::SelfAiming()
 {
-	if (phaseFlag==false)
+	if (isPhase == 1)
 	{
 		delayTimer -= 0.1f;
 

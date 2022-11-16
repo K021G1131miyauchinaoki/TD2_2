@@ -136,17 +136,24 @@ public:
 	};
 	int scene;
 
-	//ボス登場、形態変化
-	enum Boss {
-		appearance,
-		change1,
-		change2
+	//フェーズ管理,ボス登場,形態変化
+	enum Movie
+	{
+		nonMovie,	 //ムービーなし
+		appearance,  //ボス登場
+		change1,	 //形態変化1
+		change2,	 //形態変化2
 	};
+	int movie;
+	bool isMovie;
 
 	//フェーズ管理
-	//trueでプレイヤーの攻撃フェーズ
-	//falseで敵の攻撃フェーズ
-	bool	phase;
+	enum Phase {
+		playerAttack,//プレイヤーの攻撃フェーズ
+		enemyAttack, //敵の攻撃フェーズ
+	};
+	int	phase;
+	bool isPhase;
 
 	//フェーズをタイム管理（仮）
 	const	int time = 300;
