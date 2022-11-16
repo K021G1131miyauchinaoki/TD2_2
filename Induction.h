@@ -1,4 +1,5 @@
 #pragma once
+#include "DebugText.h"
 #include "model.h"
 #include "math.h"
 #include <cassert>
@@ -36,9 +37,13 @@ public:
 	//半径を返す関数
 	float GetRadius();
 
-	void SetPlayer(Player* player) { player_ = player; }
 	Vector3 sLerp(const Vector3& v1, const Vector3& v2, float time);
+
+	void SetPlayer(Player* player) { player_ = player; }
 private:
+	//テキスト
+	DebugText* debugText_ = nullptr;
+
 	//ワールド変換データ
 	WorldTransform worldTransform_;
 	//モデル

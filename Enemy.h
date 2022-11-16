@@ -8,6 +8,7 @@
 #include <memory>
 #include <list>
 #include "EnemyBullet.h"
+#include "Induction.h"
 #include "Player/Player.h"
 #include "MathUtility.h"
 using namespace MathUtility;

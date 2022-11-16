@@ -56,7 +56,7 @@ void Player::Update(bool num)
 			return bullet->IsDead();
 		});
 
-	debugText_->SetPos(50, 50);
+	/*debugText_->SetPos(50, 50);
 	debugText_->Printf("%f,%f,%f",
 		worldTransform_.translation_.x,
 		worldTransform_.translation_.y,
@@ -66,7 +66,7 @@ void Player::Update(bool num)
 	debugText_->Printf("%f,%f,%f",
 		worldTransform_.rotation_.x,
 		worldTransform_.rotation_.y,
-		worldTransform_.rotation_.z);
+		worldTransform_.rotation_.z);*/
 }
 
 //ˆÚ“®

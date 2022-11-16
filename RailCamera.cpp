@@ -107,10 +107,10 @@ void RailCamera::Update()
 	viewProjection_.TransferMatrix();
 
 	//eye‚Ì•\Ž¦
-	debugText_->SetPos(50, 110);
+	/*debugText_->SetPos(50, 110);
 	debugText_->Printf(
 		"%f,%f,%f", viewProjection_.eye.x, viewProjection_.eye.y,
-		viewProjection_.eye.z);
+		viewProjection_.eye.z);*/
 
 }
 

@@ -44,8 +44,8 @@ void Enemy::Update(bool flag)
 	worldTransform_.TransferMatrix();
 	
 	//弾を発射
-	SelfAiming();
-	/*InductionFire();*/
+	/*SelfAiming();*/
+	InductionFire();
 
 	//デバックテキスト
 	debugText_->SetPos(50, 60);
@@ -132,11 +132,52 @@ void Enemy::SelfAiming()
 
 void Enemy::InductionFire()
 {
-	inductionTimer -= 0.1f;
-	//速度
-	const float kBulletSpeed = 0.3f;
-	//球の生成
-	std::unique_ptr<EnemyBullet> newBullet = std::make_unique<EnemyBullet>();
+	if (phaseFlag == false)
+	{
+		inductionTimer -= 0.1f;
+		//球の速度
+		const float kBulletSpeed = 0.3f;
+
+		//自機狙い弾
+		assert(player_);
+
+		//プレイヤーのワールド座標の取得
+		Vector3 playerPosition;
+		playerPosition = player_->GetWorldPosition();
+		//敵のワールド座標の取得
+		Vector3 enemyPosition;
+		enemyPosition = GetWorldPosition();
+
+		Vector3 velocity(0, 0, 0);
+
+		//差分ベクトルを求める
+		velocity = enemyPosition - playerPosition;
+
+		//長さを求める
+		Vector3Length(velocity);
+		//正規化
+		Vector3Normalize(velocity);
+
+		//ベクトルの長さを,速さに合わせる
+		velocity *= kBulletSpeed;//これが速度になる
+
+		//クールタイムが０になったとき
+		if (inductionTimer <= 0) {
+			//球の生成
+			std::unique_ptr<Induction> newBullet = std::make_unique<Induction>();
+			//球の初期化
+			newBullet->Initialize(model_, worldTransform_.translation_, velocity);
+			newBullet->SetPlayer(player_);
+
+			//球の登録
+			/*bullets_.push_back(std::move(newBullet));*/
+			gameScene_->Addinduction(newBullet);
+
+			inductionTimer = 20.0f;
+		}
+		debugText_->SetPos(50, 20);
+		debugText_->Printf("speed : %f.%f,%f", velocity.x, velocity.y, velocity.z);
+	}
 }
 
 void Enemy::SpiralFire()
@@ -171,3 +212,4 @@ float Enemy::GetRadius()
 {
 	return radius;
 }
+

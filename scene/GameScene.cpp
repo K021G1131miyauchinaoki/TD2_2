@@ -92,10 +92,10 @@ void GameScene::Update()
 			phase ^= 1;
 			timer = time;
 		}
-		debugText_->SetPos(10, 10);
+		/*debugText_->SetPos(10, 10);
 		debugText_->Printf("%d", phase);
 		debugText_->SetPos(10, 30);
-		debugText_->Printf("%d",timer);
+		debugText_->Printf("%d",timer);*/
 		//自キャラの更新
 		/*phaseがtrueならプレイヤーの攻撃*/
 		player_->Update(phase);
@@ -112,7 +112,7 @@ void GameScene::Update()
 
 		//敵弾の更新
 		EnemyBulletUpdate();
-
+		EnemyInductionUpdate();
 		//isDebugCameraActive_ = true;
 
 		//レールカメラの更新
@@ -207,6 +207,9 @@ void GameScene::Draw() {
 		//敵の弾の描画
 		for (std::unique_ptr<EnemyBullet>& bullet : bullets_) {
 			bullet->Draw(railCamera_->GetViewProjection());
+		}
+		for (std::unique_ptr<Induction>& induction : inductions_) {
+			induction->Draw(railCamera_->GetViewProjection());
 		}
 		break;
 	case Scene::clear:
@@ -338,6 +341,10 @@ void GameScene::AddEnemyBullet(std::unique_ptr<EnemyBullet>&enemyBullet)
 {
 	bullets_.push_back(std::move(enemyBullet));
 }
+void GameScene::Addinduction(std::unique_ptr<Induction>& induction)
+{
+	inductions_.push_back(std::move(induction));
+}
 
 void GameScene::EnemyBulletUpdate() {
 	//デスフラグが立った球を削除
@@ -345,6 +352,16 @@ void GameScene::EnemyBulletUpdate() {
 
 	//球の更新
 	for (std::unique_ptr<EnemyBullet>& bullet : bullets_) {
+		bullet->Update();
+	}
+}
+
+void GameScene::EnemyInductionUpdate() {
+	//デスフラグが立った球を削除
+	inductions_.remove_if([](std::unique_ptr<Induction>& bullet) { return bullet->IsDead(); });
+
+	//球の更新
+	for (std::unique_ptr<Induction>& bullet : inductions_) {
 		bullet->Update();
 	}
 }

@@ -18,21 +18,22 @@ void Induction::Initialize(Model* model, const Vector3& position, const Vector3&
 
 	//引数で受け取った速度をメンバ変数に代入
 	velocity_ = velocity;
+
+	debugText_ = DebugText::GetInstance();
 }
 
 void Induction::Update()
 {
 	worldTransform_.matWorld_ = MathUtility::Matrix4Identity();
 
-	Vector3 toPlayer;
-	toPlayer.x= player_->GetWorldPosition().x - worldTransform_.translation_.x;
-	toPlayer.z = player_->GetWorldPosition().z - worldTransform_.translation_.z;
+	//座標を移動させる
+	//ベクトル計算 (playerから自機の座標までのベクトル)
+	Vector3 toPlayer = player_->GetWorldPosition() - worldTransform_.translation_;
 	//正規化
 	Vector3Normalize(toPlayer);
 	Vector3Normalize(velocity_);
-	//球面線形補間で今の速度と自キャラへのベクトルを内挿し,新たな速度とする
-	velocity_=/*スラープ関数(velocity_,toPlayer,1フレームでの補間割合t)*敵弾の速度*/
-	//進行方向に見た目の回転を合わせる
+	//新たな速度に変更する
+	velocity_ = sLerp(velocity_, toPlayer, 0.01f) * 0.3f;
 
 	//座標を移動させる
 	worldTransform_.translation_ -= velocity_;
@@ -51,6 +52,9 @@ void Induction::Update()
 void Induction::Draw(const ViewProjection& viewProjection)
 {
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
+	
+	debugText_->SetPos(50, 10);
+	debugText_->Printf("弾座標 : %f,%f,%f", worldTransform_.translation_.x, worldTransform_.translation_.y, worldTransform_.translation_.z);
 }
 
 //ワールド座標を取得
@@ -83,3 +87,4 @@ Vector3 Induction::sLerp(const Vector3& v1, const Vector3& v2, float time)
 	//↓Lerp関数sLerpに変更する必要がある
 	return v1 * (1.0f - time) + v2 * time;
 }
+
