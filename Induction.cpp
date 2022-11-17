@@ -26,14 +26,14 @@ void Induction::Update()
 {
 	worldTransform_.matWorld_ = MathUtility::Matrix4Identity();
 
-	//座標を移動させる
-	//ベクトル計算 (playerから自機の座標までのベクトル)
+	float bulletSpeed = 0.3f;
+	//差分ベクトル計算 (playerから自機の座標までのベクトル)(終点～始点)
 	Vector3 toPlayer = player_->GetWorldPosition() - worldTransform_.translation_;
-	//正規化
+	//正規化をする
 	Vector3Normalize(toPlayer);
 	Vector3Normalize(velocity_);
 	//新たな速度に変更する
-	velocity_ = sLerp(velocity_, toPlayer, 0.01f) * 0.3f;
+	velocity_ = sLerp(velocity_, toPlayer, 0.5f) * bulletSpeed;
 
 	//座標を移動させる
 	worldTransform_.translation_ -= velocity_;
@@ -53,8 +53,6 @@ void Induction::Draw(const ViewProjection& viewProjection)
 {
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
 	
-	debugText_->SetPos(50, 10);
-	debugText_->Printf("弾座標 : %f,%f,%f", worldTransform_.translation_.x, worldTransform_.translation_.y, worldTransform_.translation_.z);
 }
 
 //ワールド座標を取得
@@ -82,9 +80,9 @@ float Induction::GetRadius()
 	return radius;
 }
 
-Vector3 Induction::sLerp(const Vector3& v1, const Vector3& v2, float time)
+Vector3 Induction::sLerp(const Vector3& verocity, const Vector3& Length, float time)
 {
 	//↓Lerp関数sLerpに変更する必要がある
-	return v1 * (1.0f - time) + v2 * time;
+	
+	return verocity;
 }
-

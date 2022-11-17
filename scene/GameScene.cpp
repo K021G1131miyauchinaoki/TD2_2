@@ -64,7 +64,7 @@ void GameScene::Initialize() {
 	scene = Scene::title;
 	phase = Phase::enemyAttack;
 	isPhase = false;
-	movie = Movie::appearance;
+	movie = Movie::nonMovie;
 	isMovie = false;
 	timer = time;
 }
@@ -122,6 +122,7 @@ void GameScene::Update()
 		//敵弾の更新
 		EnemyBulletUpdate();
 		EnemyInductionUpdate();
+		EnemyTurningUpdate();
 		//isDebugCameraActive_ = true;
 
 		//レールカメラの更新
@@ -220,6 +221,9 @@ void GameScene::Draw() {
 		for (std::unique_ptr<Induction>& induction : inductions_) {
 			induction->Draw(railCamera_->GetViewProjection());
 		}
+		for (std::unique_ptr<Turning>& turning : turning_) {
+			turning->Draw(railCamera_->GetViewProjection());
+		}
 		break;
 	case Scene::clear:
 		break;
@@ -259,8 +263,12 @@ void GameScene::CheckAllCollisions()
 	//それぞれの半径
 	float pRadius = player_->GetRadius();
 	float eRadius = NULL;
+	float eTRadius = NULL;
 	for (const std::unique_ptr<Enemy>& enemy : enemys_) {
 		eRadius = enemy->GetRadius();
+	}
+	for (const std::unique_ptr<Turning>& turning : turning_) {
+		eTRadius = turning->GetRadius();
 	}
 
 	//自弾リストの取得
@@ -268,6 +276,7 @@ void GameScene::CheckAllCollisions()
 
 	//敵弾リストの取得
 	const std::list<std::unique_ptr<EnemyBullet>>& enemyBullets_ = GetBullets();
+	const std::list<std::unique_ptr<Turning>>& turning_ = GetTurningBullet();
 
 #pragma region 自キャラと敵弾の当たり判定
 
@@ -292,6 +301,27 @@ void GameScene::CheckAllCollisions()
 		}
 	}
 
+
+	//自キャラの座標
+	posA = player_->GetWorldPosition();
+	//自キャラと敵弾全ての当たり判定
+	for (const std::unique_ptr<Turning>& bullet : turning_)
+	{
+		posB = bullet->GetWorldPosition();
+		float ebRadius = bullet->GetRadius();
+		//座標Aと座標Bの距離を求める
+		//弾と弾の交差判定
+		if (
+			((posB.x - posA.x) * (posB.x - posA.x)) +
+			((posB.y - posA.y) * (posB.y - posA.y)) +
+			((posB.z - posA.z) * (posB.z - posA.z)) <=
+			((pRadius + ebRadius) * (pRadius + ebRadius)))
+		{
+			//コールバックを呼び出す
+			player_->OnCollision();
+			bullet->OnCollision();
+		}
+	}
 #pragma endregion
 
 #pragma region 自弾と敵キャラの当たり判定
@@ -319,7 +349,7 @@ void GameScene::CheckAllCollisions()
 			}
 		}
 	}
-
+	
 #pragma endregion
 
 //#pragma region 自弾と敵弾の当たり判定
@@ -357,6 +387,10 @@ void GameScene::Addinduction(std::unique_ptr<Induction>& induction)
 {
 	inductions_.push_back(std::move(induction));
 }
+void GameScene::AddTurning(std::unique_ptr<Turning>& turning)
+{
+	turning_.push_back(std::move(turning));
+}
 
 void GameScene::EnemyBulletUpdate() {
 	//デスフラグが立った球を削除
@@ -367,13 +401,21 @@ void GameScene::EnemyBulletUpdate() {
 		bullet->Update();
 	}
 }
-
 void GameScene::EnemyInductionUpdate() {
 	//デスフラグが立った球を削除
 	inductions_.remove_if([](std::unique_ptr<Induction>& bullet) { return bullet->IsDead(); });
 
 	//球の更新
 	for (std::unique_ptr<Induction>& bullet : inductions_) {
+		bullet->Update();
+	}
+}
+void GameScene::EnemyTurningUpdate() {
+	//デスフラグが立った球を削除
+	turning_.remove_if([](std::unique_ptr<Turning>& bullet) { return bullet->IsDead(); });
+
+	//球の更新
+	for (std::unique_ptr<Turning>& bullet : turning_) {
 		bullet->Update();
 	}
 }

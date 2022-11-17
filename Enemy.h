@@ -9,6 +9,7 @@
 #include <list>
 #include "EnemyBullet.h"
 #include "Induction.h"
+#include "Turning.h"
 #include "Player/Player.h"
 #include "MathUtility.h"
 using namespace MathUtility;
@@ -51,7 +52,7 @@ public:
 	//誘導
 	void InductionFire();
 	//螺旋
-	void SpiralFire();
+	void TurningFire();
 
 	void SetPlayer(Player* player) { player_ = player; }
 
@@ -116,7 +117,7 @@ private:
 	Player* player_ = nullptr;
 
 	//半径
-	float radius = 1.0f;
+	float radius = 15.0f;
 	//フェーズフラグ
 	int isPhase;
 

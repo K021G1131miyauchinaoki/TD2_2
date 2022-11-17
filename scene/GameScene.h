@@ -59,14 +59,17 @@ public:
 	//敵弾を追加する
 	void AddEnemyBullet(std::unique_ptr<EnemyBullet>&enemyBullet);
 	void Addinduction(std::unique_ptr<Induction>& induction);
+	void AddTurning(std::unique_ptr<Turning>& turning);
 
 	//弾リスト
 	const std::list<std::unique_ptr<EnemyBullet>>& GetBullets() { return bullets_; }
 	const std::list<std::unique_ptr<Induction>>& GetBulet() { return inductions_; }
+	const std::list<std::unique_ptr<Turning>>& GetTurningBullet() { return turning_; }
 
 	//敵弾の更新
 	void EnemyBulletUpdate();
 	void EnemyInductionUpdate();
+	void EnemyTurningUpdate();
 
 	/// 敵発生
 	void EnemyOcurrence();
@@ -93,7 +96,7 @@ public:
 	//敵弾
 	std::list<std::unique_ptr<EnemyBullet>> bullets_;
 	std::list<std::unique_ptr<Induction>>inductions_;
-
+	std::list<std::unique_ptr<Turning>>turning_;
 	//敵
 	std::list<std::unique_ptr<Enemy>> enemys_;
 

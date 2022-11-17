@@ -45,7 +45,8 @@ void Enemy::Update(int num)
 	
 	//弾を発射
 	/*SelfAiming();*/
-	InductionFire();
+	/*InductionFire();*/
+	TurningFire();
 
 	//デバックテキスト
 	debugText_->SetPos(50, 60);
@@ -132,7 +133,7 @@ void Enemy::SelfAiming()
 
 void Enemy::InductionFire()
 {
-	if (phaseFlag == false)
+	if (isPhase == false)
 	{
 		inductionTimer -= 0.1f;
 		//球の速度
@@ -180,13 +181,29 @@ void Enemy::InductionFire()
 	}
 }
 
-void Enemy::SpiralFire()
+void Enemy::TurningFire()
 {
-	delayTimer -= 0.1f;
+	if (isPhase == 1)
+	{
+		delayTimer -= 0.1f;
+		
+		if (delayTimer <= 0.0f)
+		{
+			//弾を生成
+			std::unique_ptr<Turning> newBullet = std::make_unique<Turning>();
+			//弾の初期化
+			newBullet->Initialize(model_, worldTransform_.translation_, Vector3(0.0f, 0.0f, 0.1f));
+			newBullet->SetPlayer(player_);
+			//弾の登録
+			gameScene_->AddTurning(newBullet);
 
-	//球の速度
-	const float kBulletSpeed = 0.5f;
-
+			delayTimer = 20.0f;
+		}
+	}
+	debugText_->SetPos(50, 10);
+	debugText_->Printf("Timer : %f", delayTimer);
+	debugText_->SetPos(50, 30);
+	debugText_->Printf("velocity : %f,%f,%f", velocity_.x, velocity_.y, velocity_.z);
 }
 
 //ワールド座標を取得
