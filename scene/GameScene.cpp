@@ -327,7 +327,7 @@ void GameScene::CheckAllCollisions()
 #pragma region 自弾と敵キャラの当たり判定
 
 #pragma region 敵キャラと自機の弾の当たり判定
-	if (phase==Phase::playerAttack&&isPhase)
+	if (phase==Phase::playerAttack)
 	{
 		//敵キャラの座標
 		for (const std::unique_ptr<Enemy>& enemy : enemys_) {
@@ -346,6 +346,8 @@ void GameScene::CheckAllCollisions()
 					enemy->OnCollision();
 					bullet->OnCollision();
 				}
+				debugText_->SetPos(50, 180);
+				debugText_->Printf("HP : %d", enemy->GetHP());
 			}
 		}
 	}

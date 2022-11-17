@@ -24,22 +24,23 @@ void Turning::Initialize(Model* model, const Vector3& position, const Vector3& v
 void Turning::Update()
 {
 	worldTransform_.matWorld_ = MathUtility::Matrix4Identity();
-	if (phaseNum_ == true)
+	if (phaseNum_ == true)//追従するのか判定(trueで追従中)
 	{
+		//追従中横に回転
 		worldTransform_.rotation_.y += 0.3f;
 	}
 	affinMat.rotateY = affin::generateRotateYMat(worldTransform_);
 	affin::setRotateMat(affinMat, worldTransform_);
 	//座標を移動させる
-	if (worldTransform_.translation_.z >= 0.0f && phaseNum_ == false)
+	if (worldTransform_.translation_.z >= 0.0f && phaseNum_ == false)//弾が出始め所定の場所へ進める
 	{
 		worldTransform_.translation_ -= velocity_;
-		if (worldTransform_.translation_.z <= 0.0f && phaseNum_ == false)
+		if (worldTransform_.translation_.z <= 0.0f && phaseNum_ == false)//所定地についたら追従モード
 		{
 			phaseNum_ = true;
 		}
 	}
-	if (phaseNum_ == true)
+	if (phaseNum_ == true)//追従モード中一定時間でプレイヤーの動きをトレース進行方向が曲がるなど
 	{
 		
 		//球の速度
@@ -65,10 +66,10 @@ void Turning::Update()
 		//正規化
 		Vector3Normalize(velocity);
 		//ベクトルの長さを,速さに合わせる
-		if (--followingTimer_ <= 0.0f)
+		if (--followingTimer_ <= 0.0f)//一定時間で再度計算されている値を掛ける
 		{
 			velocity *= kBulletSpeed;//これが速度になる
-			followingTimer_ = followTime;
+			followingTimer_ = followTime;//タイマーを戻して再度トレース出来るようにする
 		}
 		worldTransform_.translation_ -= velocity / 5;
 
@@ -83,15 +84,6 @@ void Turning::Update()
 	affin::setTransformationWolrdMat(affinMat, worldTransform_);
 	//行列の合成
 	worldTransform_.TransferMatrix();
-
-	
-
-	debugText_->SetPos(50, 80);
-	debugText_->Printf("worldTranslation : %f", worldTransform_.translation_.z);
-	debugText_->SetPos(50, 100);
-	debugText_->Printf("phaseNum : %f", phaseNum_);
-	debugText_->SetPos(50, 120);
-	debugText_->Printf("follwoTime : %d", followingTimer_);
 }
 
 void Turning::Draw(const ViewProjection& viewProjection)

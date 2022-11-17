@@ -217,7 +217,19 @@ Vector3 Enemy::GetWorldPosition() {
 
 void Enemy::OnCollision()
 {
-	isDead_ = true;
+	if (HP_ <= 0)
+	{
+		isDead_ = true;
+	}
+	else
+	{
+		HP_ -= 1;
+	}
+}
+
+int32_t Enemy::GetHP()
+{
+	return HP_;
 }
 
 //”¼Œa‚ð•Ô‚·ŠÖ”

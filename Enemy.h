@@ -61,6 +61,7 @@ public:
 
 	//衝突を検出したら呼び出されるコールバック関数
 	void OnCollision();
+	int32_t GetHP();
 
 	//半径を返す関数
 	float GetRadius();
@@ -118,6 +119,8 @@ private:
 	//自キャラ
 	Player* player_ = nullptr;
 
+	//体力
+	int32_t HP_ = 10;
 	//半径
 	float radius = 15.0f;
 	//フェーズフラグ
