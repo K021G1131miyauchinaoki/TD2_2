@@ -48,11 +48,11 @@ public:
 
 	//弾種類
 	//直線(自機狙い)
-	void SelfAiming();
+	void SelfAiming(int32_t speed);
 	//誘導
 	void InductionFire();
 	//螺旋
-	void TurningFire();
+	void TurningFire(int32_t speed);
 
 	void SetPlayer(Player* player) { player_ = player; }
 
@@ -61,7 +61,6 @@ public:
 
 	//衝突を検出したら呼び出されるコールバック関数
 	void OnCollision();
-	int32_t GetHP();
 
 	//半径を返す関数
 	float GetRadius();
@@ -106,6 +105,9 @@ private:
 	float inductionTimer = 25.0f;
 	//追従弾の発射時間
 	float turningTimer = 15.0f;
+
+	//弾を切り替えるタイマー
+	float switTimer = 30.0f;
 
 	//敵の行動パターン
 	Phase phase_ = Phase::None;

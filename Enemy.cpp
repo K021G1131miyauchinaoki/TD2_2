@@ -23,7 +23,7 @@ void Enemy::Update(int num)
 
 	switch(phase_)
 	{
-	case Phase::Approach: //接近フェーズ
+	case Phase::Approach: //待機フェーズ
 	default:
 		//移動(ベクトルを加算)
 		Approach();
@@ -44,9 +44,30 @@ void Enemy::Update(int num)
 	worldTransform_.TransferMatrix();
 	
 	//弾を発射
-	/*SelfAiming();*/
+	switTimer -= 0.1f;
+	if (HP_ > 5)
+	{
+		if (switTimer >= 15.0f)
+		{
+			SelfAiming(1);
+		}
+		else if (switTimer < 15.0f)
+		{
+			TurningFire(1);
+		}
+	}
+	else if (HP_ <= 5)
+	{
+		SelfAiming(2);
+		TurningFire(2);
+	}
+	if (switTimer <= 0.0f)
+	{
+		switTimer = 30.0f;
+	}
+	
 	/*InductionFire();*/
-	TurningFire();
+	
 
 	//デバックテキスト
 	debugText_->SetPos(50, 60);
@@ -84,14 +105,14 @@ void Enemy::Leave()
 	//}
 }
 
-void Enemy::SelfAiming()
+void Enemy::SelfAiming(int32_t speed)
 {
 	if (isPhase == 1)
 	{
-		delayTimer -= 0.1f;
-
 		//球の速度
-		const float kBulletSpeed = 0.5f;
+		const float kBulletSpeed = 0.5f * speed;
+		//ディレイタイム
+		delayTimer -= 0.5f;
 
 		//自機狙い弾
 		assert(player_);
@@ -181,11 +202,11 @@ void Enemy::InductionFire()
 	}
 }
 
-void Enemy::TurningFire()
+void Enemy::TurningFire(int32_t speed)
 {
 	if (isPhase == 1)
 	{
-		turningTimer -= 0.1f;
+		turningTimer -= 0.3f * speed;
 		
 		if (turningTimer <= 0.0f)
 		{
@@ -225,11 +246,6 @@ void Enemy::OnCollision()
 	{
 		HP_ -= 1;
 	}
-}
-
-int32_t Enemy::GetHP()
-{
-	return HP_;
 }
 
 //半径を返す関数

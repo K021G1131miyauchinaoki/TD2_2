@@ -343,11 +343,9 @@ void GameScene::CheckAllCollisions()
 					((posB.z - posA.z) * (posB.z - posA.z)) <=
 					((eRadius + pbRadius) * (eRadius + pbRadius))) {
 					//コールバックを呼び出す
-					enemy->OnCollision();
+					enemy->OnCollision(); // 一緒に体力も減らしてる
 					bullet->OnCollision();
 				}
-				debugText_->SetPos(50, 180);
-				debugText_->Printf("HP : %d", enemy->GetHP());
 			}
 		}
 	}
