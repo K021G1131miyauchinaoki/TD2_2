@@ -15,7 +15,7 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle) {
 
 }
 
-void Enemy::Update(int num)
+void Enemy::Update(int num, bool isFlag)
 {
 	this->isPhase = num;
 	//’PˆÊs—ñ‚ğİ’è

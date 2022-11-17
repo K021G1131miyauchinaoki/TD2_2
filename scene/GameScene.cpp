@@ -14,6 +14,7 @@ GameScene::~GameScene()
 	delete debugCamera_;
 	delete player_;
 	delete enemy_;
+	delete railCamera_;
 }
 
 void GameScene::Initialize() {
@@ -76,17 +77,37 @@ void GameScene::Update()
 	case Scene::title:		/*タイトル*/
 		debugText_->SetPos(10, 10);
 		debugText_->Printf("title");
-		if (input_->TriggerKey(DIK_W))
+		if (input_->TriggerKey(DIK_F))
 		{
 			scene = Scene::play;
 		}
 		break;
 	case Scene::play:		/*プレイ*/
+		if (input_->TriggerKey(DIK_0))
+		{
+			phase ^= 1;
+		}
 		if (movie!=Movie::nonMovie)
 		{
 			isMovie = true;
 		}
-
+		else
+		{
+			isMovie = false;
+		}
+		//フェーズの切り替え
+		if (!isMovie)
+		{
+			if (timer-- < 0 && phase <= 1)
+			{
+				phase ^= 1;
+				timer = time;
+			}
+		}
+		else //ムービー中タイマーを初期化
+		{
+			timer = time;
+		}
 		//当たり判定
 		CheckAllCollisions();
 
@@ -113,7 +134,7 @@ void GameScene::Update()
 		for (const std::unique_ptr<Enemy>& enemy : enemys_) {
 			enemy->SetGameScene(this);
 			/*phaseがfalseならボスの攻撃*/
-			enemy->Update(phase);
+			enemy->Update(phase,isMovie);
 		}
 		//更新コマンド
 		/*UpdateEnemyPopCommands();*/
@@ -207,7 +228,10 @@ void GameScene::Draw() {
 		break;
 	case Scene::play:
 		//自キャラの描画
-		player_->Draw(railCamera_->GetViewProjection());
+		if (movie!=Movie::appearance)
+		{
+			player_->Draw(railCamera_->GetViewProjection());
+		}
 
 		//敵キャラの描画
 		for (const std::unique_ptr<Enemy>& enemy : enemys_) {
