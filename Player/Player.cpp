@@ -31,6 +31,8 @@ void Player::Update(int num)
 {
 	//ˆÚ“®
 	Move();
+	//‹zŽû
+	Absorption();
 	//‰ñ“]
 	Rotate();
 
@@ -106,8 +108,8 @@ void Player::Move()
 	//”ÍˆÍ‚ð’´‚¦‚È‚¢ˆ—
 	worldTransform_.translation_.x = max(worldTransform_.translation_.x, -kMoveLimitX);
 	worldTransform_.translation_.x = min(worldTransform_.translation_.x, +kMoveLimitX);
-	worldTransform_.translation_.y = max(worldTransform_.translation_.y, -kMoveLimitY);
-	worldTransform_.translation_.y = min(worldTransform_.translation_.y, +kMoveLimitY);
+	worldTransform_.translation_.z = max(worldTransform_.translation_.z, -kMoveLimitY);
+	worldTransform_.translation_.z = min(worldTransform_.translation_.z, +kMoveLimitY);
 	
 }
 
@@ -183,6 +185,20 @@ void Player::Attack()
 			timer = time;
 		}
 	}
+}
+
+void Player::Absorption()
+{
+	if (input_->PushKey(DIK_SPACE))
+	{
+		AbFlag = true;
+	}
+	else
+	{
+		AbFlag = false;
+	}
+	debugText_->SetPos(50,10);
+	debugText_->Printf("Flag : %d", AbFlag);
 }
 
 Vector3 Player::bVelocity(Vector3& velocity, WorldTransform& worldTransform) 
