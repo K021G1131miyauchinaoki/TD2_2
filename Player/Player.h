@@ -32,9 +32,6 @@ public:
 	//çUåÇ
 	void Attack();
 
-	//ãzé˚
-	void Absorption();
-
 	//ï`âÊ
 	void Draw(ViewProjection viewProjection_);
 
@@ -75,7 +72,6 @@ private:
 	Input* input_ = nullptr;
 	DebugText* debugText_ = nullptr;
 
-	bool AbFlag = false;
 	//îºåa
 	float radius = 1.0f;
 };

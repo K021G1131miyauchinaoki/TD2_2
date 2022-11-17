@@ -31,8 +31,6 @@ void Player::Update(int num)
 {
 	//ˆÚ“®
 	Move();
-	//‹zŽû
-	Absorption();
 	//‰ñ“]
 	Rotate();
 
@@ -185,20 +183,6 @@ void Player::Attack()
 			timer = time;
 		}
 	}
-}
-
-void Player::Absorption()
-{
-	if (input_->PushKey(DIK_SPACE))
-	{
-		AbFlag = true;
-	}
-	else
-	{
-		AbFlag = false;
-	}
-	debugText_->SetPos(50,10);
-	debugText_->Printf("Flag : %d", AbFlag);
 }
 
 Vector3 Player::bVelocity(Vector3& velocity, WorldTransform& worldTransform) 
