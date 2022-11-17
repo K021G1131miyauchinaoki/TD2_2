@@ -103,6 +103,8 @@ private:
 	float delayTimer = 20.0f;
 	//—U“±’e‚Ì”­ËŠÔ
 	float inductionTimer = 25.0f;
+	//’Ç]’e‚Ì”­ËŠÔ
+	float turningTimer = 15.0f;
 
 	//“G‚Ìs“®ƒpƒ^[ƒ“
 	Phase phase_ = Phase::None;

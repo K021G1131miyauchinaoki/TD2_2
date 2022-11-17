@@ -185,9 +185,9 @@ void Enemy::TurningFire()
 {
 	if (isPhase == 1)
 	{
-		delayTimer -= 0.1f;
+		turningTimer -= 0.1f;
 		
-		if (delayTimer <= 0.0f)
+		if (turningTimer <= 0.0f)
 		{
 			//’e‚ğ¶¬
 			std::unique_ptr<Turning> newBullet = std::make_unique<Turning>();
@@ -197,13 +197,9 @@ void Enemy::TurningFire()
 			//’e‚Ì“o˜^
 			gameScene_->AddTurning(newBullet);
 
-			delayTimer = 20.0f;
+			turningTimer = 15.0f;
 		}
 	}
-	debugText_->SetPos(50, 10);
-	debugText_->Printf("Timer : %f", delayTimer);
-	debugText_->SetPos(50, 30);
-	debugText_->Printf("velocity : %f,%f,%f", velocity_.x, velocity_.y, velocity_.z);
 }
 
 //ƒ[ƒ‹ƒhÀ•W‚ğæ“¾
