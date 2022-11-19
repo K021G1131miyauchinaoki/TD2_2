@@ -53,7 +53,12 @@ public:
 	//親子構造のセッター
 	void SetParent(WorldTransform* worldTransform);
 
+	bool IsDead() const { return isDead_; }
 private:
+
+	//デスフラグ
+	bool isDead_ = false;
+
 	//ワールド変換データ
 	WorldTransform worldTransform_;
 
@@ -72,6 +77,8 @@ private:
 	Input* input_ = nullptr;
 	DebugText* debugText_ = nullptr;
 
+	//体力
+	int32_t HP_ = 3;
 	//半径
 	float radius = 1.0f;
 };

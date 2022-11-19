@@ -149,6 +149,8 @@ void Player::Draw(ViewProjection viewProjection)
 	{
 		bullet->Draw(viewProjection);
 	}
+	debugText_->SetPos(50, 80);
+	debugText_->Printf("HP_:%d", HP_);
 }
 
 //’e‚Ì”­ŽË
@@ -222,7 +224,14 @@ Vector3 Player::GetWorldPosition()
 
 void Player::OnCollision()
 {
-
+	if (HP_ <= 0)
+	{
+		isDead_ = true;
+	}
+	else
+	{
+		HP_ -= 1;
+	}
 }
 
 //”¼Œa‚ð•Ô‚·ŠÖ”
