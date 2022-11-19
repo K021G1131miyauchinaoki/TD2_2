@@ -1,11 +1,14 @@
 #pragma once
 #include <cassert>
+#include<vector>
+#include<cstdlib>
 #include "WorldTransform.h"
 #include "ViewProjection.h"
 #include "affin/affin.h"
 #include "Input.h"
 #include "DebugText.h"
 #include "MyFunc.h"
+#include"Enemy.h"
 
 class RailCamera
 {
@@ -16,8 +19,12 @@ public:
 	//更新
 	void Update(int num);
 
-	const ViewProjection& GetViewProjection() 
-	{ 
+	const	Vector3	lerp(const	Vector3& start, const	Vector3& end, const	float	t);
+	const Vector3 CatmullRomSpline(Vector3 P0, Vector3 P1, Vector3 P2, Vector3 P3, float t);
+	Vector3	splinePosition(const std::vector<Vector3>& points, size_t startIndex, float t);
+
+	const ViewProjection& GetViewProjection()
+	{
 		return viewProjection_;
 	}
 
@@ -36,4 +43,34 @@ private:
 	DebugText* debugText_ = nullptr;
 
 	const float M_PI = 3.141592f;
+
+	bool isMovei;
+
+	Enemy* enemy = nullptr;
+	Vector3 rotMove = { 0, 0, 0 };
+	float	radius;
+	const	float len = 5;
+	float	add_x;
+	float	add_z;
+	Vector3	pos;
+	float	angle;
+	//線形補間
+	//先頭と最後に制御点を追加している
+	std::vector<Vector3>points;
+	//p1からスタートする
+	size_t startIndex;
+	Vector3	start = { 30,-14,26 };//スタート地点
+	Vector3	p2 = { 20, 11 , 10 };
+	Vector3	p3 = { 14,-4,-6 };
+	Vector3	end = { 0,3,-35 };	 //エンド地点
+	float timerTrans;
+	const	float timerTransMax=100;
+	float	timeRate;
+
+	Vector3	startTrans;
+	Vector3	endTrans;
+	float startFovAngle;
+	float endFovAngle;
+	float timerFovAngle;
+	const float timeAngleMax=100;
 };
