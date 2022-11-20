@@ -250,7 +250,7 @@ void RailCamera::Update(int num)
 	debugText_->Printf(
 		"%f,%f,%f", rotMove.x, rotMove.z, angle); 
 		debugText_->SetPos(50, 190);
-	debugText_->Printf("%f", timeRate);
+	debugText_->Printf("%f", timeRate);*/
 }
 
 WorldTransform* RailCamera::GetWorldPosition()
