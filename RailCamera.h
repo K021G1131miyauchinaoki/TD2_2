@@ -28,7 +28,7 @@ public:
 		return viewProjection_;
 	}
 
-	int	GetSwitch();
+	const	int& GetSwitch();
 
 	//ƒ[ƒ‹ƒhÀ•W‚Ìæ“¾
 	WorldTransform* GetWorldPosition();
@@ -72,8 +72,6 @@ private:
 	float	timeRate;
 	
 	int	switchTimer;
-	const	int	switchTime;
-
 
 	Vector3	startTrans;
 	Vector3	endTrans;

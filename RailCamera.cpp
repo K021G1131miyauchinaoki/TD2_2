@@ -233,7 +233,7 @@ WorldTransform* RailCamera::GetWorldPosition()
 	return &worldTransform_;
 }
 
-int	RailCamera::GetSwitch() {
+const	int& RailCamera::GetSwitch() {
 	if (worldTransform_.translation_.x == end.x &&
 		worldTransform_.translation_.y == end.y &&
 		worldTransform_.translation_.z == end.z)
