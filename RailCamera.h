@@ -28,8 +28,12 @@ public:
 		return viewProjection_;
 	}
 
+	int	GetSwitch();
+
 	//ワールド座標の取得
 	WorldTransform* GetWorldPosition();
+
+
 
 private:
 	//ワールド変換データ
@@ -60,12 +64,16 @@ private:
 	//p1からスタートする
 	size_t startIndex;
 	Vector3	start = { 30,-14,26 };//スタート地点
-	Vector3	p2 = { 20, 11 , 10 };
+	Vector3	p2 = { 20, -7 , 10 };
 	Vector3	p3 = { 14,-4,-6 };
 	Vector3	end = { 0,3,-35 };	 //エンド地点
 	float timerTrans;
 	const	float timerTransMax=100;
 	float	timeRate;
+	
+	int	switchTimer;
+	const	int	switchTime;
+
 
 	Vector3	startTrans;
 	Vector3	endTrans;

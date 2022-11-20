@@ -159,8 +159,8 @@ public:
 	bool isPhase;
 
 	//フェーズをタイム管理（仮）
-	const	int time = 300;
-	int timer;
+	const	int phaseTime = 300;
+	int phaseTimer;
 
 	/// <summary>
 	/// ゲームシーン用

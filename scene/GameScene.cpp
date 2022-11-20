@@ -6,6 +6,7 @@
 #include <fstream>
 
 
+
 GameScene::GameScene() {}
 
 GameScene::~GameScene()
@@ -31,7 +32,7 @@ void GameScene::Initialize() {
 	model_ = Model::Create();
 
 	//レールカメラの生成
-	railCamera_ = new RailCamera();
+	railCamera_ = new	RailCamera();
 	railCamera_->Initialize(Vector3(0, 50, 0), Vector3(0, 0, 0));
 
 	//自キャラの生成
@@ -67,7 +68,7 @@ void GameScene::Initialize() {
 	isPhase = false;
 	movie = Movie::nonMovie;
 	isMovie = false;
-	timer = time;
+	phaseTimer = phaseTime;
 }
 
 void GameScene::Update()
@@ -85,28 +86,42 @@ void GameScene::Update()
 	case Scene::play:		/*プレイ*/
 		if (input_->TriggerKey(DIK_0))
 		{
-			phase ^= 1;
+			movie++;
+			if (movie==4)
+			{
+				movie = 0;
+			}
 		}
+		////ムービーのフラグ処理
+		//ムービーなし以外はフラグがtrue
 		if (movie!=Movie::nonMovie)
 		{
 			isMovie = true;
 		}
+		//ムービーなしでフラグがfalse
 		else
 		{
 			isMovie = false;
 		}
-		//フェーズの切り替え
+		////ムービーの切り替え処理
+		if (railCamera_->GetSwitch()==100)
+		{
+			movie = Movie::nonMovie;
+		}
+	
+		////フェーズの切り替え処理
+		//フェーズの切り替え(敵→プレイヤー→敵の順)
 		if (!isMovie)
 		{
-			if (timer-- < 0 && phase <= 1)
+			if (phaseTimer-- < 0 && phase <= 1)
 			{
 				phase ^= 1;
-				timer = time;
+				phaseTimer = phaseTime;
 			}
 		}
-		else //ムービー中タイマーを初期化
+		else //ムービー中フェーズタイマーを初期化
 		{
-			timer = time;
+			phaseTimer = phaseTime;
 		}
 		//当たり判定
 		CheckAllCollisions();
@@ -117,15 +132,15 @@ void GameScene::Update()
 				return enemy_->IsDead();
 			});
 		//フェーズの切り替え
-		if (timer--<0&&phase<=1)
+		/*if (phaseTimer--<0&&phase<=1)
 		{
 			phase ^= 1;
-			timer = time;
-		}
-		/*debugText_->SetPos(10, 10);
+			phaseTimer = phaseTime;
+		}*/
+		debugText_->SetPos(10, 10);
 		debugText_->Printf("%d", phase);
 		debugText_->SetPos(10, 30);
-		debugText_->Printf("%d",timer);*/
+		debugText_->Printf("%d",phaseTimer);
 		//自キャラの更新
 		/*phaseがtrueならプレイヤーの攻撃*/
 		player_->Update(phase);
@@ -228,10 +243,10 @@ void GameScene::Draw() {
 		break;
 	case Scene::play:
 		//自キャラの描画
-		if (movie!=Movie::appearance)
+		if (movie==Movie::nonMovie)
 		{
-			player_->Draw(railCamera_->GetViewProjection());
 		}
+			player_->Draw(railCamera_->GetViewProjection());
 
 		//敵キャラの描画
 		for (const std::unique_ptr<Enemy>& enemy : enemys_) {

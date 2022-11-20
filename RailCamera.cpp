@@ -56,9 +56,9 @@ void RailCamera::Initialize(const Vector3& position, const Vector3& rotation)
 	viewProjection_.Initialize();
 	//先頭と最後に制御点を追加している
 	//							p0    p1    p2 p3 p4  p5
-	std::vector<Vector3>points{ start,start,p2,p3,end,end };
+	points={ start,start,p2,p3,end,end };
 	//p1からスタートする
-	size_t startIndex = 1;
+	startIndex = 1;
 }
 
 void RailCamera::Update(int num)
@@ -76,6 +76,8 @@ void RailCamera::Update(int num)
 		if (num == 1)//登場
 		{
 			worldTransform_.translation_ = Vector3(0, 0, -20);
+			startIndex = 1;
+			//viewProjection_.fovAngleY=20.0f* MathUtility::PI / 180.0f;
 			//worldTransform_.rotation_ = Vector3(0, 0, 5);
 		}
 		else if (num == 2)//形態変化1
@@ -87,9 +89,9 @@ void RailCamera::Update(int num)
 			worldTransform_.translation_ = Vector3(0, 50, 30);
 		}
 	}
-	
+
 	Vector3 move = { 0, 0, 0 };
-	
+
 
 	const float kCharaSpeed = 0.2f;
 
@@ -98,37 +100,6 @@ void RailCamera::Update(int num)
 	worldTransform_.matWorld_ = MathUtility::Matrix4Identity();
 
 #pragma region 移動処理
-	if (num==1)
-	{
-		timerTrans++;
-		timeRate = timerTrans / timerTransMax;
-		if (timeRate>=1.0f)
-		{
-			if (startIndex < points.size() - 3)
-			{
-				startIndex++;
-				timerTrans -= timerTransMax;
-				timeRate -= 1.0f;
-			}
-			else
-			{
-				timerTrans = timerTransMax;
-				timeRate = 1.0f;
-			}
-		}
-		worldTransform_.translation_ = splinePosition(points, startIndex, timeRate);
-	}
-
-	if (input_->PushKey(DIK_M)) {
-		angle+=0.01f;
-		radius = angle * 3.14f / 180.0f;
-		add_x = cos(radius)*len;
-		add_z = sin(radius)*len;
-		rotMove.x = pos.x + add_x;
-		rotMove.z = pos.z + add_z;
-		rotMove.y = pos.y;
-		worldTransform_.translation_ = rotMove;	
-	}
 	if (input_->PushKey(DIK_A)) {
 		move.x -= kCharaSpeed;
 	}
@@ -205,7 +176,7 @@ void RailCamera::Update(int num)
 	Vector3 forward;
 	if (num == 0)
 	{
-		forward = viewProjection_.eye + Vector3{ 0, -1, 0 };
+		forward = Vector3{ 0, -1, 1 };
 	}
 	else if (num == 1)//登場
 	{
@@ -236,24 +207,38 @@ void RailCamera::Update(int num)
 	viewProjection_.TransferMatrix();
 
 	//eyeの表示
-	/*debugText_->SetPos(50, 110);
+	debugText_->SetPos(50, 110);
 	debugText_->Printf(
 		"%f,%f,%f", viewProjection_.eye.x, viewProjection_.eye.y,
 		viewProjection_.eye.z);
 	debugText_->SetPos(50, 130);
 	debugText_->Printf(
 		"%f,%f,%f", worldTransform_.rotation_.x, worldTransform_.rotation_.y, worldTransform_.rotation_.z);
-	debugText_->SetPos(50, 150);
+	/*debugText_->SetPos(50, 150);
 	debugText_->Printf(
-		"%f,%f,%f", add_x,add_z,angle);
-	debugText_->SetPos(50, 170);
+		"%f,%f,%f", add_x,add_z,angle);*/
+	/*debugText_->SetPos(50, 170);
 	debugText_->Printf(
-		"%f,%f,%f", rotMove.x, rotMove.z, angle); 
+		"%f,%f,%f", rotMove.x, rotMove.z, angle); */
 		debugText_->SetPos(50, 190);
 	debugText_->Printf("%f", timeRate);
+	//debugText_->Printf(
+	//	"%f,%f,%f", rotMove.x, rotMove.z, angle);
+	debugText_->SetPos(50, 300);
+	debugText_->Printf("switchTimer%d", switchTimer);
 }
 
 WorldTransform* RailCamera::GetWorldPosition()
 {
 	return &worldTransform_;
+}
+
+int	RailCamera::GetSwitch() {
+	if (worldTransform_.translation_.x == end.x &&
+		worldTransform_.translation_.y == end.y &&
+		worldTransform_.translation_.z == end.z)
+	{
+		switchTimer++;
+	}
+	return	switchTimer;
 }
