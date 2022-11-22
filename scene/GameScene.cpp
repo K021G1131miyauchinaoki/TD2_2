@@ -173,14 +173,14 @@ void GameScene::Update()
 		viewProjection_.TransferMatrix();
 		
 		//クリア
-		if (enemy_->GetHP() <= 0)
-		{
-			scene = Scene::clear;
-		}
-		/*if (input_->TriggerKey(DIK_B))
+		/*if (enemy_->GetHP() <= 0)
 		{
 			scene = Scene::clear;
 		}*/
+		if (input_->TriggerKey(DIK_B))
+		{
+			scene = Scene::clear;
+		}
 		//オーバー
 		if (player_->GetHP() <= 0)
 		{
