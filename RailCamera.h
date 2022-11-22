@@ -9,6 +9,7 @@
 #include "DebugText.h"
 #include "MyFunc.h"
 #include"Enemy.h"
+#include"Easing.h"
 
 class RailCamera
 {
@@ -74,8 +75,8 @@ private:
 
 	Vector3	startTrans;
 	Vector3	endTrans;
-	float startFovAngle;
-	float endFovAngle;
+	const	float startFovAngle = 20.0f;
+	const	float endFovAngle = 45.0f;
 	float timerFovAngle;
-	const float timeAngleMax=100;
+	const float timeFoAngleMax=25;
 };
