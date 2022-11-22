@@ -109,9 +109,9 @@ void RailCamera::Update(int num)
 	if (input_->PushKey(DIK_W)) {
 		move.y += kCharaSpeed;
 	}
-	if (input_->PushKey(DIK_S)) {
+	/*if (input_->PushKey(DIK_S)) {
 		move.y -= kCharaSpeed;
-	}
+	}*/
 	if (input_->PushKey(DIK_Z)) {
 		move.z -= kCharaSpeed;
 	}
@@ -207,25 +207,25 @@ void RailCamera::Update(int num)
 	viewProjection_.TransferMatrix();
 
 	//eye‚Ì•\Ž¦
-	debugText_->SetPos(50, 110);
+	/*debugText_->SetPos(50, 110);
 	debugText_->Printf(
 		"%f,%f,%f", viewProjection_.eye.x, viewProjection_.eye.y,
 		viewProjection_.eye.z);
 	debugText_->SetPos(50, 130);
 	debugText_->Printf(
-		"%f,%f,%f", worldTransform_.rotation_.x, worldTransform_.rotation_.y, worldTransform_.rotation_.z);
+		"%f,%f,%f", worldTransform_.rotation_.x, worldTransform_.rotation_.y, worldTransform_.rotation_.z);*/
 	/*debugText_->SetPos(50, 150);
 	debugText_->Printf(
 		"%f,%f,%f", add_x,add_z,angle);*/
 	/*debugText_->SetPos(50, 170);
 	debugText_->Printf(
 		"%f,%f,%f", rotMove.x, rotMove.z, angle); */
-		debugText_->SetPos(50, 190);
-	debugText_->Printf("%f", timeRate);
+	/*	debugText_->SetPos(50, 190);
+	debugText_->Printf("%f", timeRate);*/
 	//debugText_->Printf(
 	//	"%f,%f,%f", rotMove.x, rotMove.z, angle);
-	debugText_->SetPos(50, 300);
-	debugText_->Printf("switchTimer%d", switchTimer);
+	/*debugText_->SetPos(50, 300);
+	debugText_->Printf("switchTimer%d", switchTimer);*/
 }
 
 WorldTransform* RailCamera::GetWorldPosition()

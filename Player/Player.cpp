@@ -149,8 +149,8 @@ void Player::Draw(ViewProjection viewProjection)
 	{
 		bullet->Draw(viewProjection);
 	}
-	debugText_->SetPos(50, 80);
-	debugText_->Printf("HP_:%d", HP_);
+	/*debugText_->SetPos(50, 80);
+	debugText_->Printf("HP_:%d", HP_);*/
 }
 
 //’e‚Ì”­ŽË

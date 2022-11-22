@@ -26,8 +26,8 @@ void GameScene::Initialize() {
 	debugText_ = DebugText::GetInstance();
 
 	//ファイル名を指定してテクスチャを読みこむ
-	textureHandle_ = TextureManager::Load("mario.jpg");
-	enemyHandle_ = TextureManager::Load("texture.jpg");
+	textureHandle_ = TextureManager::Load("player.jpeg");
+	enemyHandle_ = TextureManager::Load("enemy.jpeg");
 	//3Dモデルの生成
 	model_ = Model::Create();
 
@@ -137,10 +137,10 @@ void GameScene::Update()
 			phase ^= 1;
 			phaseTimer = phaseTime;
 		}*/
-		debugText_->SetPos(10, 10);
+		/*debugText_->SetPos(10, 10);
 		debugText_->Printf("%d", phase);
 		debugText_->SetPos(10, 30);
-		debugText_->Printf("%d",phaseTimer);
+		debugText_->Printf("%d",phaseTimer);*/
 		//自キャラの更新
 		/*phaseがtrueならプレイヤーの攻撃*/
 		player_->Update(phase);

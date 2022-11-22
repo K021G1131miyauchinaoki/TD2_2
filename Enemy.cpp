@@ -70,11 +70,11 @@ void Enemy::Update(int num, bool isFlag)
 	
 
 	//デバックテキスト
-	debugText_->SetPos(50, 60);
+	/*debugText_->SetPos(50, 60);
 	debugText_->Printf("%f,%f,%f", 
 		worldTransform_.translation_.x, 
 		worldTransform_.translation_.y,
-		worldTransform_.translation_.z);
+		worldTransform_.translation_.z);*/
 }
 
 void Enemy::Draw(ViewProjection viewProjection)
@@ -197,8 +197,8 @@ void Enemy::InductionFire()
 
 			inductionTimer = 20.0f;
 		}
-		debugText_->SetPos(50, 20);
-		debugText_->Printf("speed : %f.%f,%f", velocity.x, velocity.y, velocity.z);
+		/*debugText_->SetPos(50, 20);
+		debugText_->Printf("speed : %f.%f,%f", velocity.x, velocity.y, velocity.z);*/
 	}
 }
 
