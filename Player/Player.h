@@ -20,6 +20,9 @@ public:
 	//初期化
 	void Initialize(Model* model,uint32_t textureHandle);
 
+	//ループ内の初期化
+	void	State();
+
 	//更新
 	void Update(int num);
 
