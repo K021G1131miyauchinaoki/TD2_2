@@ -171,6 +171,10 @@ void GameScene::Update()
 
 		viewProjection_.UpdateMatrix();
 		viewProjection_.TransferMatrix();
+		if (player_->GetHP() <= 0)
+		{
+			scene = Scene::over;
+		}
 		//クリア
 		if (input_->TriggerKey(DIK_B))
 		{

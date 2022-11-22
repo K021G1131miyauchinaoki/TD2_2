@@ -57,6 +57,7 @@ public:
 	void SetParent(WorldTransform* worldTransform);
 
 	bool IsDead() const { return isDead_; }
+	int32_t GetHP()const { return HP_; }
 private:
 
 	//デスフラグ
