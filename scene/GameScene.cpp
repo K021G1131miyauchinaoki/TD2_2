@@ -171,20 +171,25 @@ void GameScene::Update()
 
 		viewProjection_.UpdateMatrix();
 		viewProjection_.TransferMatrix();
+		
+		//クリア
+		if (enemy_->GetHP() <= 0)
+		{
+			scene = Scene::clear;
+		}
+		/*if (input_->TriggerKey(DIK_B))
+		{
+			scene = Scene::clear;
+		}*/
+		//オーバー
 		if (player_->GetHP() <= 0)
 		{
 			scene = Scene::over;
 		}
-		//クリア
-		if (input_->TriggerKey(DIK_B))
-		{
-			scene = Scene::clear;
-		}
-		//オーバー
-		if (input_->TriggerKey(DIK_V))
+		/*if (input_->TriggerKey(DIK_V))
 		{
 			scene = Scene::over;
-		}
+		}*/
 		break;
 
 	case Scene::clear:		/*ゲームクリア*/
