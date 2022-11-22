@@ -55,6 +55,12 @@ void RailCamera::Initialize(const Vector3& position, const Vector3& rotation)
 	startIndex = 1;
 }
 
+void	RailCamera::State() {
+	switchTimer = 0;
+	timerFovAngle = 0;
+	startIndex = 1;
+}
+
 void RailCamera::Update(int num)
 {	
 	//位置指定
@@ -63,6 +69,8 @@ void RailCamera::Update(int num)
 		{
 			worldTransform_.translation_ = Vector3(0, 50, 0);
 			isMovei = false;
+			viewProjection_.fovAngleY = 45.0f * MathUtility::PI / 180.0f;
+
 		}
 	}
 	else
@@ -73,7 +81,7 @@ void RailCamera::Update(int num)
 			worldTransform_.translation_ = Vector3(0, 0, -20);
 			startIndex = 1;
 			isMovei = true;
-			//viewProjection_.fovAngleY=20.0f* MathUtility::PI / 180.0f;
+			viewProjection_.fovAngleY=startFovAngle* MathUtility::PI / 180.0f;
 			//worldTransform_.rotation_ = Vector3(0, 0, 5);
 		}
 		else if (num == 2)//形態変化1
@@ -122,6 +130,13 @@ void RailCamera::Update(int num)
 			worldTransform_.translation_.z == end.z)
 		{
 			switchTimer++;
+			timerFovAngle++;
+			if (timerFovAngle<timeFoAngleMax)
+			{
+				viewProjection_.fovAngleY= (startFovAngle+(endFovAngle-startFovAngle)
+											*easeInSine(timerFovAngle/timeFoAngleMax) )
+											* MathUtility::PI / 180.0f;
+			}
 		}
 	}
 
@@ -233,32 +248,27 @@ void RailCamera::Update(int num)
 	viewProjection_.TransferMatrix();
 
 	//eyeの表示
-	/*debugText_->SetPos(50, 110);
+	debugText_->SetPos(50, 110);
 	debugText_->Printf(
 		"%f,%f,%f", viewProjection_.eye.x, viewProjection_.eye.y,
 		viewProjection_.eye.z);
 	debugText_->SetPos(50, 130);
 	debugText_->Printf(
-		"%f,%f,%f", worldTransform_.rotation_.x, worldTransform_.rotation_.y, worldTransform_.rotation_.z);*/
-	/*debugText_->SetPos(50, 150);
+		"%f,%f,%f", worldTransform_.rotation_.x, worldTransform_.rotation_.y, worldTransform_.rotation_.z);
+	debugText_->SetPos(50, 150);
 	debugText_->Printf(
-		"%f,%f,%f", add_x,add_z,angle);*/
-	/*debugText_->SetPos(50, 170);
+		"%f,%f,%f", add_x,add_z,angle);
+	debugText_->SetPos(50, 170);
 	debugText_->Printf(
-		"%f,%f,%f", rotMove.x, rotMove.z, angle); */
-	/*	debugText_->SetPos(50, 190);
-	debugText_->Printf("%f", timeRate);*/
-	//debugText_->Printf(
-	//	"%f,%f,%f", rotMove.x, rotMove.z, angle);
-	/*debugText_->SetPos(50, 300);
-	debugText_->Printf("switchTimer%d", switchTimer);*/
+		"%f,%f,%f", rotMove.x, rotMove.z, angle); 
+	debugText_->SetPos(50, 190);
+	debugText_->Printf("%f", timeRate);
+	debugText_->Printf(
+		"%f,%f,%f", rotMove.x, rotMove.z, angle);
+	debugText_->SetPos(50, 300);
+	debugText_->Printf("switchTimer%d", switchTimer);
 }
 
-void	RailCamera::State() {
-	switchTimer = 0;
-	startIndex = 1;
-
-}
 
 WorldTransform* RailCamera::GetWorldPosition()
 {

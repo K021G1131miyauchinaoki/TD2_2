@@ -78,6 +78,7 @@ void GameScene::Update()
 	case Scene::title:		/*タイトル*/
 		debugText_->SetPos(10, 10);
 		debugText_->Printf("title");
+		//キーを押したらプレイへ
 		if (input_->TriggerKey(DIK_F))
 		{
 			scene = Scene::play;
@@ -107,7 +108,7 @@ void GameScene::Update()
 			isMovie = false;
 		}
 		////ムービーの切り替え処理
-		if (movie!=0&&railCamera_->GetSwitch()==100)
+		if (movie!=0&&railCamera_->GetSwitch()==200)
 		{
 			movie = Movie::nonMovie;
 		}
@@ -140,7 +141,7 @@ void GameScene::Update()
 			phase ^= 1;
 			phaseTimer = phaseTime;
 		}*/
-		/*debugText_->SetPos(10, 10);
+		debugText_->SetPos(10, 10);
 		debugText_->Printf("%d", phase);
 		debugText_->SetPos(10, 30);
 		debugText_->Printf("%d",phaseTimer);
