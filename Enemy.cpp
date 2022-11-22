@@ -21,18 +21,6 @@ void Enemy::Update(int num, bool isFlag)
 	//単位行列を設定
 	worldTransform_.matWorld_ = MathUtility::Matrix4Identity();
 
-	switch(phase_)
-	{
-	case Phase::Approach: //待機フェーズ
-	default:
-		//移動(ベクトルを加算)
-		Approach();
-		break;
-	case Phase::Leave:   //離脱フェーズ
-		Leave();
-		break;
-	
-	}
 	//行列の計算
 	affinMat.scale = affin::generateScaleMat(worldTransform_);
 	affinMat.translate = affin::generateTransMat(worldTransform_);
@@ -81,28 +69,6 @@ void Enemy::Draw(ViewProjection viewProjection)
 {
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
 
-}
-
-void Enemy::Approach()
-{
-	//worldTransform_.translation_ += approach_;
-
-	////既定の位置に着いたら離脱へ
-	//if (worldTransform_.translation_.z <= 10.0f)
-	//{
-	//	phase_ = Phase::Leave;
-	//}
-}
-
-void Enemy::Leave()
-{
-	//worldTransform_.translation_ += leave_;
-
-	////既定の位置に着いたら接近へ
-	//if (worldTransform_.translation_.z >= 80.0f)
-	//{
-	//	phase_ = Phase::Approach;
-	//}
 }
 
 void Enemy::SelfAiming(int32_t speed)

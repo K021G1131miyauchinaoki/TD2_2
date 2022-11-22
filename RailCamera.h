@@ -19,14 +19,13 @@ public:
 	//更新
 	void Update(int num);
 
-	const	Vector3	lerp(const	Vector3& start, const	Vector3& end, const	float	t);
+	//ループ内の初期化
+	void	State();
+
 	const Vector3 CatmullRomSpline(Vector3 P0, Vector3 P1, Vector3 P2, Vector3 P3, float t);
 	Vector3	splinePosition(const std::vector<Vector3>& points, size_t startIndex, float t);
 
-	const ViewProjection& GetViewProjection()
-	{
-		return viewProjection_;
-	}
+	const ViewProjection& GetViewProjection(){return viewProjection_;}
 
 	const	int& GetSwitch();
 

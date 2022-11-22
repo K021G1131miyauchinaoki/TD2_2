@@ -26,6 +26,13 @@ void Player::Initialize(Model* model, uint32_t textureHandle)
 	timer = 0;
 }
 
+void	Player::State() {
+	timer = 0;
+	HP_ = 3;//（仮）
+	worldTransform_.translation_ = Vector3{ 0,0,-15 };
+	isDead_ = false;
+}
+
 //更新
 void Player::Update(int num)
 {

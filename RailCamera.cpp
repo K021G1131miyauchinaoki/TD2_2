@@ -2,12 +2,6 @@
 
 using namespace MathUtility;
 
-const	Vector3	RailCamera::lerp(const	Vector3& start, const	Vector3& end, const	float	t)
-{
-	//float	y=t;
-	//return	start*(1.0f-y)+end*y;
-	return	start * (1.0f - t) + end * t;
-}
 
 const Vector3 RailCamera::CatmullRomSpline(Vector3 P0, Vector3 P1, Vector3 P2, Vector3 P3, float t)
 {
@@ -62,7 +56,8 @@ void RailCamera::Initialize(const Vector3& position, const Vector3& rotation)
 }
 
 void RailCamera::Update(int num)
-{
+{	
+	//位置指定
 	if (isMovei) {
 		if (num == 0)
 		{
@@ -72,21 +67,24 @@ void RailCamera::Update(int num)
 	}
 	else
 	{
-		isMovei = true;
+		
 		if (num == 1)//登場
 		{
 			worldTransform_.translation_ = Vector3(0, 0, -20);
 			startIndex = 1;
+			isMovei = true;
 			//viewProjection_.fovAngleY=20.0f* MathUtility::PI / 180.0f;
 			//worldTransform_.rotation_ = Vector3(0, 0, 5);
 		}
 		else if (num == 2)//形態変化1
 		{
 			worldTransform_.translation_ = Vector3(0, 0, -20);
+			isMovei = true;
 		}
 		else if (num == 3)//形態変化2
 		{
 			worldTransform_.translation_ = Vector3(0, 50, 30);
+			isMovei = true;
 		}
 	}
 
@@ -100,6 +98,34 @@ void RailCamera::Update(int num)
 	worldTransform_.matWorld_ = MathUtility::Matrix4Identity();
 
 #pragma region 移動処理
+	if (num == 1)
+	{
+		timerTrans++;
+		timeRate = timerTrans / timerTransMax;
+		if (timeRate >= 1.0f)
+		{
+			if (startIndex < points.size() - 3)
+			{
+				startIndex++;
+				timerTrans -= timerTransMax;
+				timeRate -= 1.0f;
+			}
+			else
+			{
+				timerTrans = timerTransMax;
+				timeRate = 1.0f;
+			}
+		}
+		worldTransform_.translation_ = splinePosition(points, startIndex, timeRate);
+		if (worldTransform_.translation_.x == end.x &&
+			worldTransform_.translation_.y == end.y &&
+			worldTransform_.translation_.z == end.z)
+		{
+			switchTimer++;
+		}
+	}
+
+
 	if (input_->PushKey(DIK_A)) {
 		move.x -= kCharaSpeed;
 	}
@@ -228,17 +254,18 @@ void RailCamera::Update(int num)
 	debugText_->Printf("switchTimer%d", switchTimer);*/
 }
 
+void	RailCamera::State() {
+	switchTimer = 0;
+	startIndex = 1;
+
+}
+
 WorldTransform* RailCamera::GetWorldPosition()
 {
 	return &worldTransform_;
 }
 
 const	int& RailCamera::GetSwitch() {
-	if (worldTransform_.translation_.x == end.x &&
-		worldTransform_.translation_.y == end.y &&
-		worldTransform_.translation_.z == end.z)
-	{
-		switchTimer++;
-	}
+	
 	return	switchTimer;
 }

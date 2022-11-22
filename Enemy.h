@@ -40,11 +40,8 @@ public:
 	/// 描画
 	void Draw(ViewProjection viewProjection);
 
-	//接近
-	void Approach();
-
-	//離脱
-	void Leave();
+	//ループ内の初期化
+	void	State();
 
 	//弾種類
 	//直線(自機狙い)
@@ -109,8 +106,6 @@ private:
 	//弾を切り替えるタイマー
 	float switTimer = 30.0f;
 
-	//敵の行動パターン
-	Phase phase_ = Phase::None;
 
 	//デスフラグ
 	bool isDead_ = false;

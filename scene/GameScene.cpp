@@ -81,6 +81,9 @@ void GameScene::Update()
 		if (input_->TriggerKey(DIK_F))
 		{
 			scene = Scene::play;
+			//ループ内の初期化
+			player_->State();
+			railCamera_->State();
 		}
 		break;
 	case Scene::play:		/*プレイ*/
@@ -104,7 +107,7 @@ void GameScene::Update()
 			isMovie = false;
 		}
 		////ムービーの切り替え処理
-		if (railCamera_->GetSwitch()==100)
+		if (movie!=0&&railCamera_->GetSwitch()==100)
 		{
 			movie = Movie::nonMovie;
 		}
@@ -140,7 +143,9 @@ void GameScene::Update()
 		/*debugText_->SetPos(10, 10);
 		debugText_->Printf("%d", phase);
 		debugText_->SetPos(10, 30);
-		debugText_->Printf("%d",phaseTimer);*/
+		debugText_->Printf("%d",phaseTimer);
+		debugText_->SetPos(10, 50);
+		debugText_->Printf("%d", movie);
 		//自キャラの更新
 		/*phaseがtrueならプレイヤーの攻撃*/
 		player_->Update(phase);
@@ -163,17 +168,6 @@ void GameScene::Update()
 
 		//レールカメラの更新
 		railCamera_->Update(movie);
-
-		//if (isDebugCameraActive_)
-		//{
-		//	debugCamera_->Update();
-		//	viewProjection_.matView = debugCamera_->GetViewProjection().matView;
-		//	viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
-		//	viewProjection_.TransferMatrix();
-		//}
-		//else
-		//{
-		//}
 
 		viewProjection_.UpdateMatrix();
 		viewProjection_.TransferMatrix();
