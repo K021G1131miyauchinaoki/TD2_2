@@ -46,8 +46,6 @@ public:
 	//弾種類
 	//直線(自機狙い)
 	void SelfAiming(int32_t speed);
-	//誘導
-	void InductionFire();
 	//螺旋
 	void TurningFire(int32_t speed);
 
@@ -62,12 +60,16 @@ public:
 	//半径を返す関数
 	float GetRadius();
 
-	//敵リスト
-	const std::list<std::unique_ptr<Enemy>>& GetEnemys() { return enemys_; }
-
-	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
-
 	bool IsDead() const { return isDead_; }
+
+	//弾
+	std::list<std::unique_ptr<EnemyBullet>> bullets_;
+	//弾リストを取得
+	std::list<std::unique_ptr<EnemyBullet>>& GetBullets() { return bullets_; };
+	//弾
+	std::list<std::unique_ptr<Turning>> tBullets_;
+	//弾リストを取得
+	std::list<std::unique_ptr<Turning>>& GetTurning() { return tBullets_; };
 
 private:
 	//ワールドトランスフォーム
@@ -78,9 +80,6 @@ private:
 
 	//テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
-	
-	//ゲームシーン
-	GameScene* gameScene_ = nullptr;
 
 	DebugText* debugText_ = nullptr;
 
@@ -109,9 +108,6 @@ private:
 
 	//デスフラグ
 	bool isDead_ = false;
-
-	//敵リスト
-	std::list<std::unique_ptr<Enemy>> enemys_;
 
 	//自キャラ
 	Player* player_ = nullptr;

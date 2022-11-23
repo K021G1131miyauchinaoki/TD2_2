@@ -49,9 +49,10 @@ void GameScene::Initialize() {
 	//自キャラの初期化
 	player_->Initialize(model_, textureHandle_);
 
-	//敵の情報の初期化
-	/*LoadEnemyPopData();*/
-	EnemyOcurrence();
+	//敵キャラの初期化
+	enemy_ = new	Enemy();
+	enemy_->Initialize(model_,enemyHandle_);
+	enemy_->SetPlayer(player_);
 
 	//親子構造
 	player_->SetParent(railCamera_->GetWorldPosition());
@@ -138,12 +139,6 @@ void GameScene::Update()
 		}
 		//当たり判定
 		CheckAllCollisions();
-
-		//デスフラグの立った敵を削除
-		enemys_.remove_if([](std::unique_ptr < Enemy>& enemy_)
-			{
-				return enemy_->IsDead();
-			});
 		//フェーズの切り替え
 		/*if (phaseTimer--<0&&phase<=1)
 		{
@@ -161,20 +156,7 @@ void GameScene::Update()
 		player_->Update(phase);
 
 		//敵キャラの更新
-		for (const std::unique_ptr<Enemy>& enemy : enemys_) {
-			enemy->SetGameScene(this);
-			/*phaseがfalseならボスの攻撃*/
-			enemy->Update(phase,isMovie);
-		}
-		//更新コマンド
-		/*UpdateEnemyPopCommands();*/
-
-
-		//敵弾の更新
-		EnemyBulletUpdate();
-		EnemyInductionUpdate();
-		EnemyTurningUpdate();
-		//isDebugCameraActive_ = true;
+		enemy_->Update(phase,isMovie);
 
 		//レールカメラの更新
 		railCamera_->Update(movie);
@@ -265,20 +247,7 @@ void GameScene::Draw() {
 			player_->Draw(railCamera_->GetViewProjection());
 
 		//敵キャラの描画
-		for (const std::unique_ptr<Enemy>& enemy : enemys_) {
-			enemy->Draw(railCamera_->GetViewProjection());
-		}
-
-		//敵の弾の描画
-		for (std::unique_ptr<EnemyBullet>& bullet : bullets_) {
-			bullet->Draw(railCamera_->GetViewProjection());
-		}
-		for (std::unique_ptr<Induction>& induction : inductions_) {
-			induction->Draw(railCamera_->GetViewProjection());
-		}
-		for (std::unique_ptr<Turning>& turning : turning_) {
-			turning->Draw(railCamera_->GetViewProjection());
-		}
+		enemy_->Draw(railCamera_->GetViewProjection());
 		break;
 	case Scene::clear:
 		object_->Draw(railCamera_->GetViewProjection(), clearHandle_);
@@ -320,20 +289,15 @@ void GameScene::CheckAllCollisions()
 	//それぞれの半径
 	float pRadius = player_->GetRadius();
 	float eRadius = NULL;
-	float eTRadius = NULL;
-	for (const std::unique_ptr<Enemy>& enemy : enemys_) {
-		eRadius = enemy->GetRadius();
-	}
-	for (const std::unique_ptr<Turning>& turning : turning_) {
-		eTRadius = turning->GetRadius();
-	}
+	//float eTRadius = NULL;
+	eRadius = enemy_->GetRadius();
 
 	//自弾リストの取得
 	const std::list<std::unique_ptr<PlayerBullet>>& playerBullets = player_->GetBullets();
 
 	//敵弾リストの取得
-	const std::list<std::unique_ptr<EnemyBullet>>& enemyBullets_ = GetBullets();
-	const std::list<std::unique_ptr<Turning>>& turning_ = GetTurningBullet();
+	const std::list<std::unique_ptr<EnemyBullet>>& enemyBullets_ = enemy_->GetBullets();
+	const std::list<std::unique_ptr<Turning>>& turning_ = enemy_->GetTurning();
 
 #pragma region 自キャラと敵弾の当たり判定
 
@@ -387,22 +351,20 @@ void GameScene::CheckAllCollisions()
 	if (phase==Phase::playerAttack)
 	{
 		//敵キャラの座標
-		for (const std::unique_ptr<Enemy>& enemy : enemys_) {
-			posA = enemy->GetWorldPosition();
-			//敵キャラと自弾全ての当たり判定
-			for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets) {
-				posB = bullet->GetWorldPosition();
-				float pbRadius = bullet->GetRadius();
-				//座標Aと座標Bの距離を求める
-				//球と球
-				if (
-					((posB.x - posA.x) * (posB.x - posA.x)) + ((posB.y - posA.y) * (posB.y - posA.y)) +
-					((posB.z - posA.z) * (posB.z - posA.z)) <=
-					((eRadius + pbRadius) * (eRadius + pbRadius))) {
-					//コールバックを呼び出す
-					enemy->OnCollision(); // 一緒に体力も減らしてる
-					bullet->OnCollision();
-				}
+		posA = enemy_->GetWorldPosition();
+		//敵キャラと自弾全ての当たり判定
+		for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets) {
+			posB = bullet->GetWorldPosition();
+			float pbRadius = bullet->GetRadius();
+			//座標Aと座標Bの距離を求める
+			//球と球
+			if (
+				((posB.x - posA.x) * (posB.x - posA.x)) + ((posB.y - posA.y) * (posB.y - posA.y)) +
+				((posB.z - posA.z) * (posB.z - posA.z)) <=
+				((eRadius + pbRadius) * (eRadius + pbRadius))) {
+				//コールバックを呼び出す
+				enemy_->OnCollision(); // 一緒に体力も減らしてる
+				bullet->OnCollision();
 			}
 		}
 	}
@@ -435,140 +397,3 @@ void GameScene::CheckAllCollisions()
 //
 //#pragma endregion
 }
-
-void GameScene::AddEnemyBullet(std::unique_ptr<EnemyBullet>&enemyBullet)
-{
-	bullets_.push_back(std::move(enemyBullet));
-}
-void GameScene::Addinduction(std::unique_ptr<Induction>& induction)
-{
-	inductions_.push_back(std::move(induction));
-}
-void GameScene::AddTurning(std::unique_ptr<Turning>& turning)
-{
-	turning_.push_back(std::move(turning));
-}
-
-void GameScene::EnemyBulletUpdate() {
-	//デスフラグが立った球を削除
-	bullets_.remove_if([](std::unique_ptr<EnemyBullet>& bullet) { return bullet->IsDead(); });
-
-	//球の更新
-	for (std::unique_ptr<EnemyBullet>& bullet : bullets_) {
-		bullet->Update();
-	}
-}
-void GameScene::EnemyInductionUpdate() {
-	//デスフラグが立った球を削除
-	inductions_.remove_if([](std::unique_ptr<Induction>& bullet) { return bullet->IsDead(); });
-
-	//球の更新
-	for (std::unique_ptr<Induction>& bullet : inductions_) {
-		bullet->Update();
-	}
-}
-void GameScene::EnemyTurningUpdate() {
-	//デスフラグが立った球を削除
-	turning_.remove_if([](std::unique_ptr<Turning>& bullet) { return bullet->IsDead(); });
-
-	//球の更新
-	for (std::unique_ptr<Turning>& bullet : turning_) {
-		bullet->Update();
-	}
-}
-
-void GameScene::EnemyOcurrence() {
-	//敵の生成
-	std::unique_ptr<Enemy> newEnemy = std::make_unique<Enemy>();
-	//敵の初期化
-	newEnemy->Initialize(model_, enemyHandle_);
-	newEnemy->SetPlayer(player_);
-
-	//敵の登録
-	enemys_.push_back(std::move(newEnemy));
-}
-//
-//void GameScene::LoadEnemyPopData()
-//{
-//	//ファイルを開く
-//	std::ifstream file;
-//	file.open("Resources/enemyPop.csv");
-//	assert(file.is_open());
-//
-//	//ファイルの内容を文字列ストリームにコピー
-//	enemyPopCommands << file.rdbuf();
-//
-//	//ファイルを閉じる
-//	file.close();
-//}
-//
-//void GameScene::UpdateEnemyPopCommands()
-//{
-//	//待機処理
-//	if (isWait_)
-//	{
-//		waitTimer--;
-//		if (waitTimer <= 0)
-//		{
-//			//待機完了
-//			isWait_ = false;
-//		}
-//		return;
-//	}
-//
-//	//1桁分の文字列を入れる変数
-//	std::string line;
-//
-//	//コマンド実行ループ
-//	while (getline(enemyPopCommands, line))
-//	{
-//		//1桁分文字列をストリームに変換して解析しやすくする
-//		std::istringstream line_stream(line);
-//
-//		std::string word;
-//		//,区切りで行の先頭文字列を取得
-//		getline(line_stream, word, ',');
-//
-//		//"//"から始まる行はコメント
-//		if (word.find("//") == 0)
-//		{
-//			//コメント行を飛ばす
-//			continue;
-//		}
-//
-//		//POPコマンド
-//		if (word.find("POP") == 0)
-//		{
-//			//x座標
-//			getline(line_stream,word,',');
-//			float x = (float)std::atof(word.c_str());
-//
-//			//y座標
-//			getline(line_stream, word, ',');
-//			float y = (float)std::atof(word.c_str());
-//
-//			//z座標
-//			getline(line_stream, word, ',');
-//			float z = (float)std::atof(word.c_str());
-//
-//			//敵を発生させる
-//			EnemyOcurrence(Vector3(x, y, z));
-//		}
-//
-//		//WAITコマンド
-//		else if (word.find("WAIT") == 0)
-//		{
-//			getline(line_stream, word, ',');
-//
-//			//待ち時間
-//			int32_t waitTime = atoi(word.c_str());
-//
-//			//待機開始
-//			isWait_ = true;
-//			waitTimer = waitTime;
-//
-//			//コマンドループを抜ける
-//			break;
-//		}
-//	}
-//}

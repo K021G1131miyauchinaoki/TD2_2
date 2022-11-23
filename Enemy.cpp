@@ -17,6 +17,10 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle) {
 
 void Enemy::Update(int num, bool isFlag)
 {
+	//デスフラグの立った弾を削除
+	bullets_.remove_if([](std::unique_ptr<EnemyBullet>& bullet) { return bullet->IsDead(); });
+	tBullets_.remove_if([](std::unique_ptr<Turning>& bullet) { return bullet->IsDead(); });
+
 	this->isPhase = num;
 	//単位行列を設定
 	worldTransform_.matWorld_ = MathUtility::Matrix4Identity();
@@ -54,6 +58,12 @@ void Enemy::Update(int num, bool isFlag)
 		switTimer = 30.0f;
 	}
 	
+	for (std::unique_ptr<EnemyBullet>& bullet : bullets_) {
+		bullet->Update();
+	}
+	for (std::unique_ptr<Turning>& bullet : tBullets_) {
+		bullet->Update();
+	}
 	/*InductionFire();*/
 	
 
@@ -68,6 +78,12 @@ void Enemy::Update(int num, bool isFlag)
 void Enemy::Draw(ViewProjection viewProjection)
 {
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
+	for (std::unique_ptr<EnemyBullet>& bullet : bullets_) {
+		bullet->Draw(viewProjection);
+	}
+	for (std::unique_ptr<Turning>& bullet : tBullets_) {
+		bullet->Draw(viewProjection);
+	}
 
 }
 
@@ -110,63 +126,63 @@ void Enemy::SelfAiming(int32_t speed)
 			newBullet->Initialize(model_, worldTransform_.translation_, velocity);
 
 			//球の登録
-			/*bullets_.push_back(std::move(newBullet));*/
-			gameScene_->AddEnemyBullet(newBullet);
+			bullets_.push_back(std::move(newBullet));
+			//gameScene_->AddEnemyBullet(newBullet);
 
 			delayTimer = 20.0f;
 		}
 	}
 }
 
-void Enemy::InductionFire()
-{
-	if (isPhase == false)
-	{
-		inductionTimer -= 0.1f;
-		//球の速度
-		const float kBulletSpeed = 0.3f;
-
-		//自機狙い弾
-		assert(player_);
-
-		//プレイヤーのワールド座標の取得
-		Vector3 playerPosition;
-		playerPosition = player_->GetWorldPosition();
-		//敵のワールド座標の取得
-		Vector3 enemyPosition;
-		enemyPosition = GetWorldPosition();
-
-		Vector3 velocity(0, 0, 0);
-
-		//差分ベクトルを求める
-		velocity = enemyPosition - playerPosition;
-
-		//長さを求める
-		Vector3Length(velocity);
-		//正規化
-		Vector3Normalize(velocity);
-
-		//ベクトルの長さを,速さに合わせる
-		velocity *= kBulletSpeed;//これが速度になる
-
-		//クールタイムが０になったとき
-		if (inductionTimer <= 0) {
-			//球の生成
-			std::unique_ptr<Induction> newBullet = std::make_unique<Induction>();
-			//球の初期化
-			newBullet->Initialize(model_, worldTransform_.translation_, velocity);
-			newBullet->SetPlayer(player_);
-
-			//球の登録
-			/*bullets_.push_back(std::move(newBullet));*/
-			gameScene_->Addinduction(newBullet);
-
-			inductionTimer = 20.0f;
-		}
-		/*debugText_->SetPos(50, 20);
-		debugText_->Printf("speed : %f.%f,%f", velocity.x, velocity.y, velocity.z);*/
-	}
-}
+//void Enemy::InductionFire()
+//{
+//	if (isPhase == false)
+//	{
+//		inductionTimer -= 0.1f;
+//		//球の速度
+//		const float kBulletSpeed = 0.3f;
+//
+//		//自機狙い弾
+//		assert(player_);
+//
+//		//プレイヤーのワールド座標の取得
+//		Vector3 playerPosition;
+//		playerPosition = player_->GetWorldPosition();
+//		//敵のワールド座標の取得
+//		Vector3 enemyPosition;
+//		enemyPosition = GetWorldPosition();
+//
+//		Vector3 velocity(0, 0, 0);
+//
+//		//差分ベクトルを求める
+//		velocity = enemyPosition - playerPosition;
+//
+//		//長さを求める
+//		Vector3Length(velocity);
+//		//正規化
+//		Vector3Normalize(velocity);
+//
+//		//ベクトルの長さを,速さに合わせる
+//		velocity *= kBulletSpeed;//これが速度になる
+//
+//		//クールタイムが０になったとき
+//		if (inductionTimer <= 0) {
+//			//球の生成
+//			std::unique_ptr<Induction> newBullet = std::make_unique<Induction>();
+//			//球の初期化
+//			newBullet->Initialize(model_, worldTransform_.translation_, velocity);
+//			newBullet->SetPlayer(player_);
+//
+//			//球の登録
+//			/*bullets_.push_back(std::move(newBullet));*/
+//			gameScene_->Addinduction(newBullet);
+//
+//			inductionTimer = 20.0f;
+//		}
+//		/*debugText_->SetPos(50, 20);
+//		debugText_->Printf("speed : %f.%f,%f", velocity.x, velocity.y, velocity.z);*/
+//	}
+//}
 
 void Enemy::TurningFire(int32_t speed)
 {
@@ -182,7 +198,9 @@ void Enemy::TurningFire(int32_t speed)
 			newBullet->Initialize(model_, worldTransform_.translation_, Vector3(0.0f, 0.0f, 0.1f));
 			newBullet->SetPlayer(player_);
 			//弾の登録
-			gameScene_->AddTurning(newBullet);
+			tBullets_.push_back(std::move(newBullet));
+
+			//gameScene_->AddTurning(newBullet);
 
 			turningTimer = 15.0f;
 		}
