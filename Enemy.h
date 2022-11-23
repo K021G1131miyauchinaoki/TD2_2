@@ -35,7 +35,7 @@ public:
 	void Initialize(Model* model, uint32_t textureHandle);
 
 	/// çXêV
-	void Update(bool isFlag);
+	void Update(bool isFlag,int movie);
 
 	/// ï`âÊ
 	void Draw(ViewProjection viewProjection);

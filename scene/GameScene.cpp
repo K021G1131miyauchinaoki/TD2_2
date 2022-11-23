@@ -73,7 +73,7 @@ void GameScene::Initialize() {
 	//PrimitiveDrawer::GetInstance()->SetViewProjection(&debugCamera_->GetViewProjection());
 
 	scene = Scene::title;
-	movie = Movie::nonMovie;
+	
 	isMovie = false;
 	phaseTimer = phaseTime;
 }
@@ -90,6 +90,7 @@ void GameScene::Update()
 		if (input_->TriggerKey(DIK_F))
 		{
 			scene = Scene::play;
+			movie = Movie::appearance;
 			//ループ内の初期化
 			player_->State();
 			railCamera_->State();
@@ -141,7 +142,7 @@ void GameScene::Update()
 		player_->Update();
 
 		//敵キャラの更新
-		enemy_->Update(isMovie);
+		enemy_->Update(isMovie,movie);
 
 		//レールカメラの更新
 		railCamera_->Update(movie);

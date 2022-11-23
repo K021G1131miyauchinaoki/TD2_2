@@ -15,7 +15,7 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle) {
 
 }
 
-void Enemy::Update( bool isFlag)
+void Enemy::Update( bool isFlag,int movie)
 {
 	//デスフラグの立った弾を削除
 	bullets_.remove_if([](std::unique_ptr<EnemyBullet>& bullet) { return bullet->IsDead(); });
@@ -35,33 +35,36 @@ void Enemy::Update( bool isFlag)
 	worldTransform_.TransferMatrix();
 	
 	//弾を発射
-	switTimer -= 0.1f;
-	if (HP_ > 10)
+	if (movie == 0)
 	{
-		if (switTimer >= 15.0f)
+		switTimer -= 0.1f;
+		if (HP_ > 10)
 		{
-			SelfAiming(1);
+			if (switTimer >= 15.0f)
+			{
+				SelfAiming(1);
+			}
+			else if (switTimer < 15.0f)
+			{
+				TurningFire(1);
+			}
 		}
-		else if (switTimer < 15.0f)
+		else if (HP_ <= 10)
 		{
-			TurningFire(1);
+			SelfAiming(2);
+			TurningFire(2);
 		}
-	}
-	else if (HP_ <= 10)
-	{
-		SelfAiming(2);
-		TurningFire(2);
-	}
-	if (switTimer <= 0.0f)
-	{
-		switTimer = 30.0f;
-	}
-	
-	for (std::unique_ptr<EnemyBullet>& bullet : bullets_) {
-		bullet->Update();
-	}
-	for (std::unique_ptr<Turning>& bullet : tBullets_) {
-		bullet->Update();
+		if (switTimer <= 0.0f)
+		{
+			switTimer = 30.0f;
+		}
+
+		for (std::unique_ptr<EnemyBullet>& bullet : bullets_) {
+			bullet->Update();
+		}
+		for (std::unique_ptr<Turning>& bullet : tBullets_) {
+			bullet->Update();
+		}
 	}
 	/*InductionFire();*/
 	
@@ -231,4 +234,3 @@ float Enemy::GetRadius()
 {
 	return radius;
 }
-
