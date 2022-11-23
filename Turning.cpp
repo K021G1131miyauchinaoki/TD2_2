@@ -7,7 +7,7 @@ void Turning::Initialize(Model* model, const Vector3& position, const Vector3& v
 	//
 	model_ = model;
 	//テクスチャハンドルの読み込み
-	textureHandle_ = TextureManager::Load("mera.jpg");
+	textureHandle_ = TextureManager::Load("enemyB.png");
 
 	//ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
