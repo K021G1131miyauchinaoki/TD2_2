@@ -15,6 +15,22 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle) {
 
 }
 
+void	Enemy::State() {
+	BulletDelete();
+	//打ち出すまでの時間
+	delayTimer = 20.0f;
+	//誘導弾の発射時間
+	inductionTimer = 25.0f;
+	//追従弾の発射時間
+	turningTimer = 15.0f;
+	//弾を切り替えるタイマー
+	switTimer = 30.0f;
+	//デスフラグ
+	isDead_ = false;
+	//体力
+	HP_ = 20;
+}
+
 void Enemy::Update( bool isFlag,int movie)
 {
 	//デスフラグの立った弾を削除
@@ -134,56 +150,6 @@ void Enemy::SelfAiming(int32_t speed)
 	}
 }
 
-//void Enemy::InductionFire()
-//{
-//	if (isPhase == false)
-//	{
-//		inductionTimer -= 0.1f;
-//		//球の速度
-//		const float kBulletSpeed = 0.3f;
-//
-//		//自機狙い弾
-//		assert(player_);
-//
-//		//プレイヤーのワールド座標の取得
-//		Vector3 playerPosition;
-//		playerPosition = player_->GetWorldPosition();
-//		//敵のワールド座標の取得
-//		Vector3 enemyPosition;
-//		enemyPosition = GetWorldPosition();
-//
-//		Vector3 velocity(0, 0, 0);
-//
-//		//差分ベクトルを求める
-//		velocity = enemyPosition - playerPosition;
-//
-//		//長さを求める
-//		Vector3Length(velocity);
-//		//正規化
-//		Vector3Normalize(velocity);
-//
-//		//ベクトルの長さを,速さに合わせる
-//		velocity *= kBulletSpeed;//これが速度になる
-//
-//		//クールタイムが０になったとき
-//		if (inductionTimer <= 0) {
-//			//球の生成
-//			std::unique_ptr<Induction> newBullet = std::make_unique<Induction>();
-//			//球の初期化
-//			newBullet->Initialize(model_, worldTransform_.translation_, velocity);
-//			newBullet->SetPlayer(player_);
-//
-//			//球の登録
-//			/*bullets_.push_back(std::move(newBullet));*/
-//			gameScene_->Addinduction(newBullet);
-//
-//			inductionTimer = 20.0f;
-//		}
-//		/*debugText_->SetPos(50, 20);
-//		debugText_->Printf("speed : %f.%f,%f", velocity.x, velocity.y, velocity.z);*/
-//	}
-//}
-
 void Enemy::TurningFire(int32_t speed)
 {
 	turningTimer -= 0.3f * speed;
@@ -233,4 +199,16 @@ void Enemy::OnCollision()
 float Enemy::GetRadius()
 {
 	return radius;
+}
+
+void	Enemy::BulletDelete(){
+	for (std::unique_ptr<EnemyBullet>& bullet : bullets_) {
+		bullet->OnCollision();
+	}
+	for (std::unique_ptr<Turning>& bullet : tBullets_) {
+		bullet->OnCollision();
+	}
+	//デスフラグの立った弾を削除
+	bullets_.remove_if([](std::unique_ptr<EnemyBullet>& bullet) { return bullet->IsDead(); });
+	tBullets_.remove_if([](std::unique_ptr<Turning>& bullet) { return bullet->IsDead(); });
 }

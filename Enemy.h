@@ -71,6 +71,10 @@ public:
 	//弾リストを取得
 	std::list<std::unique_ptr<Turning>>& GetTurning() { return tBullets_; };
 
+	//敵弾デリート
+	void	BulletDelete();
+
+
 private:
 	//ワールドトランスフォーム
 	WorldTransform worldTransform_;
