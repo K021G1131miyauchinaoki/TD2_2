@@ -83,6 +83,8 @@ private:
 
 	//‘Ì—Í
 	int32_t HP_ = 3;
+	bool chargFlag = false;
+	int32_t bulletCount = 0;
 	//”¼Œa
 	float radius = 1.0f;
 };

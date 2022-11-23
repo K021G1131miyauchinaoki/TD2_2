@@ -117,7 +117,7 @@ private:
 	Player* player_ = nullptr;
 
 	//体力
-	int32_t HP_ = 10;
+	int32_t HP_ = 20;
 	//半径
 	float radius = 15.0f;
 	//フェーズフラグ

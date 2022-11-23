@@ -33,7 +33,7 @@ void Enemy::Update(int num, bool isFlag)
 	
 	//’e‚ð”­ŽË
 	switTimer -= 0.1f;
-	if (HP_ > 5)
+	if (HP_ > 10)
 	{
 		if (switTimer >= 15.0f)
 		{
@@ -44,7 +44,7 @@ void Enemy::Update(int num, bool isFlag)
 			TurningFire(1);
 		}
 	}
-	else if (HP_ <= 5)
+	else if (HP_ <= 10)
 	{
 		SelfAiming(2);
 		TurningFire(2);
@@ -173,7 +173,7 @@ void Enemy::TurningFire(int32_t speed)
 	if (isPhase == 1)
 	{
 		turningTimer -= 0.3f * speed;
-		
+
 		if (turningTimer <= 0.0f)
 		{
 			//’e‚ð¶¬

@@ -141,7 +141,7 @@ void RailCamera::Update(int num)
 	}
 
 
-	if (input_->PushKey(DIK_A)) {
+	/*if (input_->PushKey(DIK_A)) {
 		move.x -= kCharaSpeed;
 	}
 	if (input_->PushKey(DIK_D)) {
@@ -150,15 +150,15 @@ void RailCamera::Update(int num)
 	if (input_->PushKey(DIK_W)) {
 		move.y += kCharaSpeed;
 	}
-	/*if (input_->PushKey(DIK_S)) {
+	if (input_->PushKey(DIK_S)) {
 		move.y -= kCharaSpeed;
-	}*/
+	}
 	if (input_->PushKey(DIK_Z)) {
 		move.z -= kCharaSpeed;
 	}
 	if (input_->PushKey(DIK_X)) {
 		move.z += kCharaSpeed;
-	}
+	}*/
 	////ˆÚ“®ŒÀŠEÀ•W
 	//const float kMoveLimitX = 36.0f;
 	//const float kMoveLimitY = 20.0f;
@@ -182,7 +182,7 @@ void RailCamera::Update(int num)
 	Matrix4 matRotY;
 
 	//‰ñ“]ˆ—
-	if (input_->PushKey(DIK_Q)) {
+	/*if (input_->PushKey(DIK_Q)) {
 		worldTransform_.rotation_.x += kCharaRotX;
 	}
 	if (input_->PushKey(DIK_E)) {
@@ -193,7 +193,7 @@ void RailCamera::Update(int num)
 	}
 	if (input_->PushKey(DIK_T)) {
 		worldTransform_.rotation_.y -= kCharaRotX;
-	}
+	}*/
 	//(-)2ƒÎ‚ð’´‚¦‚½‚ç‰ñ“]Šp‚ð0‚É–ß‚·ˆ—
 	if (worldTransform_.rotation_.x >= (M_PI * 2) || worldTransform_.rotation_.x <= -(M_PI * 2)) {
 		worldTransform_.rotation_.x = 0;
