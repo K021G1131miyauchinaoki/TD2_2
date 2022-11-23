@@ -91,6 +91,8 @@ void Enemy::Update( bool isFlag,int movie)
 		worldTransform_.translation_.x, 
 		worldTransform_.translation_.y,
 		worldTransform_.translation_.z);*/
+	debugText_->SetPos(50, 20);
+	debugText_->Printf("HP_:%d", HP_);
 }
 
 void Enemy::Draw(ViewProjection viewProjection)

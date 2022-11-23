@@ -74,7 +74,7 @@ public:
 	//敵弾デリート
 	void	BulletDelete();
 
-
+	int32_t GetHP()const { return HP_; }
 private:
 	//ワールドトランスフォーム
 	WorldTransform worldTransform_;
