@@ -57,16 +57,6 @@ public:
 	//すべての子分の当たり判定をチェックする関数
 	void CheckAllCollisions();
 
-	//敵弾を追加する
-	void AddEnemyBullet(std::unique_ptr<EnemyBullet>&enemyBullet);
-	void Addinduction(std::unique_ptr<Induction>& induction);
-	void AddTurning(std::unique_ptr<Turning>& turning);
-
-	//敵弾の更新
-	void EnemyBulletUpdate();
-	void EnemyInductionUpdate();
-	void EnemyTurningUpdate();
-
   private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
@@ -79,6 +69,9 @@ public:
 	uint32_t clearHandle_ = 0;
 	uint32_t overHandle_ = 0;
 	uint32_t titleHandle_ = 0;
+
+	//オブジェクト
+	Object* object_ = nullptr;
 
 	//3Dモデル
 	Model* model_ = nullptr;
@@ -138,14 +131,6 @@ public:
 	};
 	int movie;
 	bool isMovie;
-
-	//フェーズ管理
-	enum Phase {
-		playerAttack,//プレイヤーの攻撃フェーズ
-		enemyAttack, //敵の攻撃フェーズ
-	};
-	int	phase;
-	bool isPhase;
 
 	//フェーズをタイム管理（仮）
 	const	int phaseTime = 300;

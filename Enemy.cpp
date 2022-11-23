@@ -15,13 +15,12 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle) {
 
 }
 
-void Enemy::Update(int num, bool isFlag)
+void Enemy::Update( bool isFlag)
 {
 	//デスフラグの立った弾を削除
 	bullets_.remove_if([](std::unique_ptr<EnemyBullet>& bullet) { return bullet->IsDead(); });
 	tBullets_.remove_if([](std::unique_ptr<Turning>& bullet) { return bullet->IsDead(); });
 
-	this->isPhase = num;
 	//単位行列を設定
 	worldTransform_.matWorld_ = MathUtility::Matrix4Identity();
 
@@ -89,48 +88,46 @@ void Enemy::Draw(ViewProjection viewProjection)
 
 void Enemy::SelfAiming(int32_t speed)
 {
-	if (isPhase == 1)
-	{
-		//球の速度
-		const float kBulletSpeed = 0.5f * speed;
-		//ディレイタイム
-		delayTimer -= 0.5f;
 
-		//自機狙い弾
-		assert(player_);
+	//球の速度
+	const float kBulletSpeed = 0.5f * speed;
+	//ディレイタイム
+	delayTimer -= 0.5f;
 
-		//プレイヤーのワールド座標の取得
-		Vector3 playerPosition;
-		playerPosition = player_->GetWorldPosition();
-		//敵のワールド座標の取得
-		Vector3 enemyPosition;
-		enemyPosition = GetWorldPosition();
+	//自機狙い弾
+	assert(player_);
 
-		Vector3 velocity(0, 0, 0);
+	//プレイヤーのワールド座標の取得
+	Vector3 playerPosition;
+	playerPosition = player_->GetWorldPosition();
+	//敵のワールド座標の取得
+	Vector3 enemyPosition;
+	enemyPosition = GetWorldPosition();
 
-		//差分ベクトルを求める
-		velocity = enemyPosition - playerPosition;
+	Vector3 velocity(0, 0, 0);
 
-		//長さを求める
-		Vector3Length(velocity);
-		//正規化
-		Vector3Normalize(velocity);
-		//ベクトルの長さを,速さに合わせる
-		velocity *= kBulletSpeed;//これが速度になる
+	//差分ベクトルを求める
+	velocity = enemyPosition - playerPosition;
 
-		//クールタイムが０になったとき
-		if (delayTimer <= 0) {
-			//球の生成
-			std::unique_ptr<EnemyBullet> newBullet = std::make_unique<EnemyBullet>();
-			//球の初期化
-			newBullet->Initialize(model_, worldTransform_.translation_, velocity);
+	//長さを求める
+	Vector3Length(velocity);
+	//正規化
+	Vector3Normalize(velocity);
+	//ベクトルの長さを,速さに合わせる
+	velocity *= kBulletSpeed;//これが速度になる
 
-			//球の登録
-			bullets_.push_back(std::move(newBullet));
-			//gameScene_->AddEnemyBullet(newBullet);
+	//クールタイムが０になったとき
+	if (delayTimer <= 0) {
+		//球の生成
+		std::unique_ptr<EnemyBullet> newBullet = std::make_unique<EnemyBullet>();
+		//球の初期化
+		newBullet->Initialize(model_, worldTransform_.translation_, velocity);
 
-			delayTimer = 20.0f;
-		}
+		//球の登録
+		bullets_.push_back(std::move(newBullet));
+		//gameScene_->AddEnemyBullet(newBullet);
+
+		delayTimer = 20.0f;
 	}
 }
 
@@ -186,24 +183,21 @@ void Enemy::SelfAiming(int32_t speed)
 
 void Enemy::TurningFire(int32_t speed)
 {
-	if (isPhase == 1)
+	turningTimer -= 0.3f * speed;
+
+	if (turningTimer <= 0.0f)
 	{
-		turningTimer -= 0.3f * speed;
+		//弾を生成
+		std::unique_ptr<Turning> newBullet = std::make_unique<Turning>();
+		//弾の初期化
+		newBullet->Initialize(model_, worldTransform_.translation_, Vector3(0.0f, 0.0f, 0.1f));
+		newBullet->SetPlayer(player_);
+		//弾の登録
+		tBullets_.push_back(std::move(newBullet));
 
-		if (turningTimer <= 0.0f)
-		{
-			//弾を生成
-			std::unique_ptr<Turning> newBullet = std::make_unique<Turning>();
-			//弾の初期化
-			newBullet->Initialize(model_, worldTransform_.translation_, Vector3(0.0f, 0.0f, 0.1f));
-			newBullet->SetPlayer(player_);
-			//弾の登録
-			tBullets_.push_back(std::move(newBullet));
+		//gameScene_->AddTurning(newBullet);
 
-			//gameScene_->AddTurning(newBullet);
-
-			turningTimer = 15.0f;
-		}
+		turningTimer = 15.0f;
 	}
 }
 

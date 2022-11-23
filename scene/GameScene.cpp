@@ -73,8 +73,6 @@ void GameScene::Initialize() {
 	//PrimitiveDrawer::GetInstance()->SetViewProjection(&debugCamera_->GetViewProjection());
 
 	scene = Scene::title;
-	phase = Phase::enemyAttack;
-	isPhase = false;
 	movie = Movie::nonMovie;
 	isMovie = false;
 	phaseTimer = phaseTime;
@@ -122,17 +120,6 @@ void GameScene::Update()
 		{
 			movie = Movie::nonMovie;
 		}
-	
-		////フェーズの切り替え処理
-		//フェーズの切り替え(敵→プレイヤー→敵の順)
-		if (!isMovie)
-		{
-			if (phaseTimer-- < 0 && phase <= 1)
-			{
-				phase ^= 1;
-				phaseTimer = phaseTime;
-			}
-		}
 		else //ムービー中フェーズタイマーを初期化
 		{
 			phaseTimer = phaseTime;
@@ -145,18 +132,16 @@ void GameScene::Update()
 			phase ^= 1;
 			phaseTimer = phaseTime;
 		}*/
-		debugText_->SetPos(10, 10);
-		debugText_->Printf("%d", phase);
 		debugText_->SetPos(10, 30);
 		debugText_->Printf("%d",phaseTimer);
 		debugText_->SetPos(10, 50);
 		debugText_->Printf("%d", movie);
 		//自キャラの更新
 		/*phaseがtrueならプレイヤーの攻撃*/
-		player_->Update(phase);
+		player_->Update();
 
 		//敵キャラの更新
-		enemy_->Update(phase,isMovie);
+		enemy_->Update(isMovie);
 
 		//レールカメラの更新
 		railCamera_->Update(movie);
@@ -348,26 +333,24 @@ void GameScene::CheckAllCollisions()
 #pragma region 自弾と敵キャラの当たり判定
 
 #pragma region 敵キャラと自機の弾の当たり判定
-	if (phase==Phase::playerAttack)
-	{
-		//敵キャラの座標
-		posA = enemy_->GetWorldPosition();
-		//敵キャラと自弾全ての当たり判定
-		for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets) {
-			posB = bullet->GetWorldPosition();
-			float pbRadius = bullet->GetRadius();
-			//座標Aと座標Bの距離を求める
-			//球と球
-			if (
-				((posB.x - posA.x) * (posB.x - posA.x)) + ((posB.y - posA.y) * (posB.y - posA.y)) +
-				((posB.z - posA.z) * (posB.z - posA.z)) <=
-				((eRadius + pbRadius) * (eRadius + pbRadius))) {
-				//コールバックを呼び出す
-				enemy_->OnCollision(); // 一緒に体力も減らしてる
-				bullet->OnCollision();
-			}
+	//敵キャラの座標
+	posA = enemy_->GetWorldPosition();
+	//敵キャラと自弾全ての当たり判定
+	for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets) {
+		posB = bullet->GetWorldPosition();
+		float pbRadius = bullet->GetRadius();
+		//座標Aと座標Bの距離を求める
+		//球と球
+		if (
+			((posB.x - posA.x) * (posB.x - posA.x)) + ((posB.y - posA.y) * (posB.y - posA.y)) +
+			((posB.z - posA.z) * (posB.z - posA.z)) <=
+			((eRadius + pbRadius) * (eRadius + pbRadius))) {
+			//コールバックを呼び出す
+			enemy_->OnCollision(); // 一緒に体力も減らしてる
+			bullet->OnCollision();
 		}
 	}
+	
 	
 #pragma endregion
 

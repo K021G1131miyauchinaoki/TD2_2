@@ -24,7 +24,7 @@ public:
 	void	State();
 
 	//XV
-	void Update(int num);
+	void Update();
 
 	//ˆÚ“®
 	void Move();

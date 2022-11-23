@@ -34,7 +34,7 @@ void	Player::State() {
 }
 
 //更新
-void Player::Update(int num)
+void Player::Update()
 {
 	//移動
 	Move();
@@ -47,10 +47,8 @@ void Player::Update(int num)
 	MyFunc::UpdateWorldTransform(worldTransform_);
 
 	//攻撃
-	if (num==0)
-	{
-		Attack();
-	}
+	Attack();
+	
 	//弾更新
 	for(std::unique_ptr<PlayerBullet>& bullet : bullets_)
 	{
