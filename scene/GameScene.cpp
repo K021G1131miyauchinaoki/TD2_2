@@ -93,7 +93,6 @@ void GameScene::Update()
 			movie = Movie::appearance;
 			//ループ内の初期化
 			player_->State();
-			enemy_->State();
 			railCamera_->State();
 		}
 		break;
@@ -140,7 +139,7 @@ void GameScene::Update()
 		debugText_->Printf("%d", movie);
 		//自キャラの更新
 		/*phaseがtrueならプレイヤーの攻撃*/
-		player_->Update(movie);
+		player_->Update();
 
 		//敵キャラの更新
 		enemy_->Update(isMovie,movie);
