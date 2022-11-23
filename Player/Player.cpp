@@ -31,23 +31,29 @@ void	Player::State() {
 	HP_ = 3;//（仮）
 	worldTransform_.translation_ = Vector3{ 0,0,-15 };
 	isDead_ = false;
+	BulletDelete();
 }
 
 //更新
-void Player::Update()
+void Player::Update(int	movie)
 {
-	//移動
-	Move();
-	//回転
-	Rotate();
-
+	if (movie == 0)
+	{
+		//移動
+		Move();
+		//回転
+		Rotate();
+	}
 	//ペアレント先更新
 	//worldTransform_.matWorld_ *= worldTransform_.parent_->matWorld_;
 
 	MyFunc::UpdateWorldTransform(worldTransform_);
 
 	//攻撃
-	Attack();
+	if (movie==0)
+	{
+		Attack();
+	}
 	
 	//弾更新
 	for(std::unique_ptr<PlayerBullet>& bullet : bullets_)
@@ -248,4 +254,12 @@ float Player::GetRadius()
 void Player::SetParent(WorldTransform* worldTransform)
 {
 	worldTransform_.parent_ = worldTransform;
+}
+
+void	Player::BulletDelete() {
+	for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
+		bullet->OnCollision();
+	}
+	//デスフラグの立った弾を削除
+	bullets_.remove_if([](std::unique_ptr<PlayerBullet>& bullet) { return bullet->IsDead(); });
 }

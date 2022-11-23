@@ -59,6 +59,8 @@ void	RailCamera::State() {
 	switchTimer = 0;
 	timerFovAngle = 0;
 	startIndex = 1;
+	timeRate = 0.0f;
+	timerTrans = 0.0f;
 }
 
 void RailCamera::Update(int num)
@@ -78,7 +80,7 @@ void RailCamera::Update(int num)
 		
 		if (num == 1)//ìoèÍ
 		{
-			worldTransform_.translation_ = Vector3(0, 0, -20);
+			worldTransform_.translation_ = start;
 			startIndex = 1;
 			isMovei = true;
 			viewProjection_.fovAngleY=startFovAngle* MathUtility::PI / 180.0f;

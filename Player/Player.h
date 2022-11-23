@@ -24,7 +24,7 @@ public:
 	void	State();
 
 	//更新
-	void Update();
+	void Update(int	movie);
 
 	//移動
 	void Move();
@@ -58,6 +58,9 @@ public:
 
 	bool IsDead() const { return isDead_; }
 	int32_t GetHP()const { return HP_; }
+
+	void	BulletDelete();
+
 private:
 
 	//デスフラグ

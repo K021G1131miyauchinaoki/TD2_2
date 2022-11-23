@@ -15,6 +15,19 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle) {
 
 }
 
+void	Enemy::State() {
+	BulletDelete();
+	HP_ = 20;
+	//打ち出すまでの時間
+	delayTimer = 20.0f;
+	//誘導弾の発射時間
+	inductionTimer = 25.0f;
+	//追従弾の発射時間
+	turningTimer = 15.0f;
+	//弾を切り替えるタイマー
+	switTimer = 30.0f;
+}
+
 void Enemy::Update( bool isFlag,int movie)
 {
 	//デスフラグの立った弾を削除
@@ -233,4 +246,16 @@ void Enemy::OnCollision()
 float Enemy::GetRadius()
 {
 	return radius;
+}
+
+void	Enemy::BulletDelete() {
+	for (std::unique_ptr<EnemyBullet>& bullet : bullets_) {
+		bullet->OnCollision();
+	}
+	for (std::unique_ptr<Turning>& bullet : tBullets_) {
+		bullet->OnCollision();
+	}
+	//デスフラグの立った弾を削除
+	bullets_.remove_if([](std::unique_ptr<EnemyBullet>& bullet) { return bullet->IsDead(); });
+	tBullets_.remove_if([](std::unique_ptr<Turning>& bullet) { return bullet->IsDead(); });
 }
