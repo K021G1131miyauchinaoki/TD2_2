@@ -26,8 +26,8 @@ void GameScene::Initialize() {
 	debugText_ = DebugText::GetInstance();
 
 	//ファイル名を指定してテクスチャを読みこむ
-	textureHandle_ = TextureManager::Load("player.jpeg");
-	enemyHandle_ = TextureManager::Load("enemy.jpeg");
+	textureHandle_ = TextureManager::Load("player.png");
+	enemyHandle_ = TextureManager::Load("enemy.png");
 	//3Dモデルの生成
 	model_ = Model::Create();
 
