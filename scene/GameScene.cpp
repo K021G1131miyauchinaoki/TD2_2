@@ -30,7 +30,7 @@ void GameScene::Initialize() {
 	enemyHandle_ = TextureManager::Load("enemy.png");
 	clearHandle_ = TextureManager::Load("Clear.png");
 	overHandle_ = TextureManager::Load("Over.png");
-	titleHandle_ = TextureManager::Load("Clear.png");
+	titleHandle_ = TextureManager::Load("title.png");
 
 	//3Dモデルの生成
 	model_ = Model::Create();
@@ -223,7 +223,7 @@ void GameScene::Draw() {
 	switch (scene)
 	{
 	case Scene::title:
-		object_->Draw(railCamera_->GetViewProjection(), clearHandle_);
+		object_->Draw(railCamera_->GetViewProjection(), titleHandle_);
 		break;
 	case Scene::play:
 		//自キャラの描画
