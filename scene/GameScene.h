@@ -15,6 +15,7 @@
 #include "affin/affin.h"
 #include "MyFunc.h"
 #include "Player/Player.h"
+#include "Object.h"
 #include "Enemy.h"
 #include "RailCamera.h"
 #include "EnemyBullet.h"
@@ -83,6 +84,9 @@ public:
 	//テクスチャハンドル
 	uint32_t textureHandle_ = 0;
 	uint32_t enemyHandle_ = 0;
+	uint32_t clearHandle_ = 0;
+	uint32_t overHandle_ = 0;
+	uint32_t titleHandle_ = 0;
 
 	//3Dモデル
 	Model* model_ = nullptr;
@@ -93,6 +97,8 @@ public:
 	//敵キャラ
 	Enemy* enemy_ = nullptr;
 
+	//タイトル等専用オブジェクト
+	Object* object_ = nullptr;
 	//敵弾
 	std::list<std::unique_ptr<EnemyBullet>> bullets_;
 	std::list<std::unique_ptr<Induction>>inductions_;

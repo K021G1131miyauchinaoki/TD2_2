@@ -105,6 +105,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MyFunc.cpp" />
     <ClCompile Include="MyMath.cpp" />
+    <ClCompile Include="Object.cpp" />
     <ClCompile Include="PlayerBullet.cpp" />
     <ClCompile Include="Player\Player.cpp" />
     <ClCompile Include="RailCamera.cpp" />
@@ -146,6 +147,7 @@
     <ClInclude Include="math\Vector4.h" />
     <ClInclude Include="MyFunc.h" />
     <ClInclude Include="MyMath.h" />
+    <ClInclude Include="Object.h" />
     <ClInclude Include="PlayerBullet.h" />
     <ClInclude Include="Player\Player.h" />
     <ClInclude Include="RailCamera.h" />

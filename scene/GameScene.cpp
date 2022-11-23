@@ -28,6 +28,10 @@ void GameScene::Initialize() {
 	//ファイル名を指定してテクスチャを読みこむ
 	textureHandle_ = TextureManager::Load("player.png");
 	enemyHandle_ = TextureManager::Load("enemy.png");
+	clearHandle_ = TextureManager::Load("Clear.png");
+	overHandle_ = TextureManager::Load("Over.png");
+	titleHandle_ = TextureManager::Load("Clear.png");
+
 	//3Dモデルの生成
 	model_ = Model::Create();
 
@@ -35,6 +39,10 @@ void GameScene::Initialize() {
 	railCamera_ = new	RailCamera();
 	railCamera_->Initialize(Vector3(0, 50, 0), Vector3(0, 0, 0));
 
+	//オブジェクト
+	object_ = new Object();
+	//初期化
+	object_->Initialize(model_);
 	//自キャラの生成
 	player_ = new Player();
 
@@ -76,6 +84,7 @@ void GameScene::Update()
 	switch (scene)
 	{
 	case Scene::title:		/*タイトル*/
+		object_->Update();
 		debugText_->SetPos(10, 10);
 		debugText_->Printf("title");
 		//キーを押したらプレイへ
@@ -194,6 +203,7 @@ void GameScene::Update()
 		break;
 
 	case Scene::clear:		/*ゲームクリア*/
+		object_->Update();
 		debugText_->SetPos(10, 30);
 		debugText_->Printf("clear");
 		//スペースでタイトル
@@ -204,6 +214,7 @@ void GameScene::Update()
 		break;
 
 	case Scene::over:		/*ゲームオーバー*/
+		object_->Update();
 		debugText_->SetPos(10, 10);
 		debugText_->Printf("over");
 		//スペースでタイトル
@@ -244,6 +255,7 @@ void GameScene::Draw() {
 	switch (scene)
 	{
 	case Scene::title:
+		object_->Draw(railCamera_->GetViewProjection(), clearHandle_);
 		break;
 	case Scene::play:
 		//自キャラの描画
@@ -269,8 +281,10 @@ void GameScene::Draw() {
 		}
 		break;
 	case Scene::clear:
+		object_->Draw(railCamera_->GetViewProjection(), clearHandle_);
 		break;
 	case Scene::over:
+		object_->Draw(railCamera_->GetViewProjection(), overHandle_);
 		break;
 	}
 	// 3Dオブジェクト描画後処理
