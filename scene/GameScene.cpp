@@ -84,10 +84,10 @@ void GameScene::Update()
 	{
 	case Scene::title:		/*タイトル*/
 		object_->Update();
-		debugText_->SetPos(10, 10);
-		debugText_->Printf("title");
+		/*debugText_->SetPos(10, 10);
+		debugText_->Printf("title");*/
 		//キーを押したらプレイへ
-		if (input_->TriggerKey(DIK_F))
+		if (input_->TriggerKey(DIK_SPACE))
 		{
 			scene = Scene::play;
 			movie = Movie::appearance;
@@ -134,10 +134,10 @@ void GameScene::Update()
 			phase ^= 1;
 			phaseTimer = phaseTime;
 		}*/
-		debugText_->SetPos(10, 30);
+		/*debugText_->SetPos(10, 30);
 		debugText_->Printf("%d",phaseTimer);
 		debugText_->SetPos(10, 50);
-		debugText_->Printf("%d", movie);
+		debugText_->Printf("%d", movie);*/
 		//自キャラの更新
 		/*phaseがtrueならプレイヤーの攻撃*/
 		player_->Update(movie);
@@ -173,8 +173,8 @@ void GameScene::Update()
 
 	case Scene::clear:		/*ゲームクリア*/
 		object_->Update();
-		debugText_->SetPos(10, 30);
-		debugText_->Printf("clear");
+		/*debugText_->SetPos(10, 30);
+		debugText_->Printf("clear");*/
 		//スペースでタイトル
 		if (input_->TriggerKey(DIK_SPACE))
 		{
@@ -184,8 +184,8 @@ void GameScene::Update()
 
 	case Scene::over:		/*ゲームオーバー*/
 		object_->Update();
-		debugText_->SetPos(10, 10);
-		debugText_->Printf("over");
+		/*debugText_->SetPos(10, 10);
+		debugText_->Printf("over");*/
 		//スペースでタイトル
 		if (input_->TriggerKey(DIK_SPACE))
 		{

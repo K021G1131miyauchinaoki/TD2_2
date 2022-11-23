@@ -248,7 +248,7 @@ void RailCamera::Update(int num)
 	viewProjection_.TransferMatrix();
 
 	//eye‚Ì•\Ž¦
-	debugText_->SetPos(50, 110);
+	/*debugText_->SetPos(50, 110);
 	debugText_->Printf(
 		"%f,%f,%f", viewProjection_.eye.x, viewProjection_.eye.y,
 		viewProjection_.eye.z);
@@ -266,7 +266,7 @@ void RailCamera::Update(int num)
 	debugText_->Printf(
 		"%f,%f,%f", rotMove.x, rotMove.z, angle);
 	debugText_->SetPos(50, 300);
-	debugText_->Printf("switchTimer%d", switchTimer);
+	debugText_->Printf("switchTimer%d", switchTimer);*/
 }
 
 

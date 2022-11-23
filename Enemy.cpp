@@ -152,7 +152,7 @@ void Enemy::SelfAiming(int32_t speed)
 
 void Enemy::TurningFire(int32_t speed)
 {
-	turningTimer -= 0.3f * speed;
+	turningTimer -= 0.1f * speed;
 
 	if (turningTimer <= 0.0f)
 	{
