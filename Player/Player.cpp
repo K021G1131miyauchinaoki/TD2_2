@@ -89,20 +89,20 @@ void Player::Move()
 	const float kCharacterSpeed = 0.2f;
 
 	//‰Ÿ‚µ‚½•ûŒü‚ÅˆÚ“®—Ê‚ð•Ï‰»
-	if (input_->PushKey(DIK_RIGHT))
+	if (input_->PushKey(DIK_RIGHT)|| input_->PushKey(DIK_D))
 	{
 		move.x = kCharacterSpeed;
 	}
-	else if (input_->PushKey(DIK_LEFT))
+	else if (input_->PushKey(DIK_LEFT)|| input_->PushKey(DIK_A))
 	{
 		move.x = -kCharacterSpeed;
 	}
 
-	if (input_->PushKey(DIK_UP))
+	if (input_->PushKey(DIK_UP)|| input_->PushKey(DIK_W))
 	{
 		move.z = kCharacterSpeed;
 	}
-	else if (input_->PushKey(DIK_DOWN))
+	else if (input_->PushKey(DIK_DOWN)|| input_->PushKey(DIK_S))
 	{
 		move.z = -kCharacterSpeed;
 	}
